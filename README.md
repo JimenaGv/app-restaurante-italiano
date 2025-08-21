@@ -18,8 +18,10 @@ El trabajo se realizará en equipo utilizando el marco de trabajo **SCRUM**, con
 - **Discord**: Comunicación interna.
 
 ### Acuerdos:
-- **Revisión de código** por al menos un compañero antes de integrarlo.
-- **Documentación** clara y actualizada en el repositorio.
+- **Revisión de código**: Cada integrante trabajará en su propia rama con el nombre **`features/usuario_de_github`**. Antes de integrar los cambios a la rama **`main`**, los cambios deben ser revisados y aprobados por al menos un compañero.
+- **Documentación**: La documentación debe mantenerse clara y actualizada en el repositorio, asegurando que todos los aspectos del proyecto estén bien documentados.
+- **Aprobación de Merge**: Los cambios deben ser aprobados por el equipo, ya sea mediante **pull requests** o mediante **acuerdos mutuos en una plática** antes de hacer el merge con la rama **`main`**.
+
 
 ### Clonar el Repositorio:
 ```bash
