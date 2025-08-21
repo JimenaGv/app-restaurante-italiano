@@ -5,7 +5,7 @@ Este documento define los roles y responsabilidades de cada miembro del equipo d
 ## Miembros
 ### Jimena García
 * Lista de actividades
-### 2
+### Karen Martínez Florentino
 * Lista de actividades
 ### 3
 * Lista de actividades
@@ -17,7 +17,7 @@ Este documento define los roles y responsabilidades de cada miembro del equipo d
 #### Jimena García
 * jimena_gv (Jimena😊)
 #### 2
-* Usuario
+* ladyblue521 (KarenMtz0722)
 #### 3
 * Usuario
 #### 4
