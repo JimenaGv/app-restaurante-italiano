@@ -4,6 +4,8 @@
 // Método de pago
 // Botón de confirmación
 
+import '../styles/global.css'
+
 import { useNavigate } from 'react-router-dom'
 
 // Valores temporales para pruebas

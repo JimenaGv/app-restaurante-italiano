@@ -1,4 +1,5 @@
 // Página que muestra el historial de pedidos
+import '../styles/global.css'
 
 import { useState, useEffect } from 'react'
 
