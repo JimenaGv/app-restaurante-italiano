@@ -6,6 +6,7 @@ import { Home } from './pages/Home'
 import { ConfirmarPedido } from './pages/ConfirmarPedido'
 import { PedidoConfirmado } from './pages/PedidoConfirmado'
 import { HistorialPedidos } from './pages/HistorialPedidos'
+import { NotFound } from './pages/NotFound'
 
 export const App = () => {
   return (
@@ -19,6 +20,8 @@ export const App = () => {
           <Route path='/confirmacion-pedido' element={<ConfirmarPedido />} />
           <Route path='/pedido-confirmado' element={<PedidoConfirmado />} />
           <Route path='/historial' element={<HistorialPedidos />} />
+          {/* Página para rutas no establecidas */}
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </NavbarProvider>

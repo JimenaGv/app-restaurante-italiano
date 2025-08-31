@@ -21,7 +21,7 @@ mongoose
   .then(() => console.log('Conectado a MongoDB'));
 
 app.listen(PORT, () => {
-  console.log('Servidor corriendo en el puerto ', PORT);
+  console.log('Servidor corriendo en el puerto', PORT);
 });
 
 app.use('/pedidos', pedidosRouter);
