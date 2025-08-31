@@ -1,7 +1,9 @@
-import express from "express";
-import mongoose from "mongoose"
-import { config } from "dotenv"
-import cors from "cors";
+
+import express from 'express'
+import mongoose from 'mongoose'
+import cors from 'cors'
+import { config } from 'dotenv'
+import pedidosRouter from './routes/pedidos.routes.js'
 
 
 config()
@@ -21,3 +23,6 @@ mongoose.connect(process.env.MONGO_KEY).then( () => console.log( "Conectado a Mo
 app.listen(PORT, () => {
   console.log("Servidor corriendo en el puerto", PORT);
 });
+
+app.use('/pedidos', pedidosRouter)
+
