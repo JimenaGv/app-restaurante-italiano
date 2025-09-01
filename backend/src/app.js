@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import { config } from 'dotenv';
 import pedidosRouter from './routes/pedidos.routes.js';
+import perfilRouter from "./routes/infoPerfil.routes.js";
 
 config();
 
@@ -24,4 +25,5 @@ app.listen(PORT, () => {
   console.log('Servidor corriendo en el puerto', PORT);
 });
 
+app.use("/api/perfil", perfilRouter);
 app.use('/pedidos', pedidosRouter);

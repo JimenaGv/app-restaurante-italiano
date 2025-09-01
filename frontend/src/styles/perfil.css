@@ -178,3 +178,9 @@ body {
 .btn:hover {
   background: #c53030;
 }
+.error {
+  color: red;         
+  font-size: 0.9rem;  
+  margin-top: 4px;    
+  font-weight: 500;  
+}
