@@ -11,7 +11,7 @@ export const Navbar = () => {
       {/* Logo */}
        <Link to="/home" className="logo">
         <img 
-          src="/logoOscuro.png"     // 👈 pon aquí la ruta de tu logo en public/
+          src="/logoOscuro.png"     
           alt="Bella Italia"
           className="logo-img"
         />
