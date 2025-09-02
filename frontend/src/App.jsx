@@ -7,6 +7,7 @@ import { ConfirmarPedido } from './pages/ConfirmarPedido'
 import { PedidoConfirmado } from './pages/PedidoConfirmado'
 import { HistorialPedidos } from './pages/HistorialPedidos'
 import { NotFound } from './pages/NotFound'
+import { Menu } from './pages/Menu'
 
 export const App = () => {
   return (
@@ -18,6 +19,7 @@ export const App = () => {
           <Route path='/perfil' element={<UserProfile />} />
           <Route path='/' element={<Home />} />
           <Route path='/confirmacion-pedido' element={<ConfirmarPedido />} />
+          <Route path='/menu' element={<Menu />} />
           <Route path='/pedido-confirmado' element={<PedidoConfirmado />} />
           <Route path='/historial' element={<HistorialPedidos />} />
           {/* Página para rutas no establecidas */}

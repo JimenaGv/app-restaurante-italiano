@@ -18,7 +18,9 @@ export const Navbar = () => {
 
       {/* Links */}
       <ul className='nav-links'>
-        <li>Menú</li>
+        <Link to='/menu'>
+          <li>Menú</li>
+        </Link>
         <li>Ubicación</li>
         <li>Historia</li>
         <li>Contacto</li>
