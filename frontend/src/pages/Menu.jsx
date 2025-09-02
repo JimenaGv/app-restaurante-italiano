@@ -3,6 +3,7 @@ import '../styles/menu.css'
 import React, { useState } from 'react'
 import { NavbarProvider } from '../context/navbarContext'
 import { CardMenu } from '../components/menu/CardMenu'
+import { ModalPlatillo } from '../components/menu/ModalPlatillo'
 
 export const Menu = () => {
   const menu = [
@@ -42,7 +43,7 @@ export const Menu = () => {
           id: 'platos_principales-1',
           name: 'Spaghetti Carbonara',
           price: 12.99,
-          image: 'https://fthmb.tqn.com/AmtBki2yVYtxFyDoH6PpU6-RYag=/3888x2592/filters:fill(auto,1)/italian-food--pasta-alla-carbonara-111648900-5a4fd617ec2f640037f8cf3d.jpg',
+          image: 'https://thefoodxp.com/wp-content/uploads/2021/06/Spaghetti-carbonara-Recipe.jpg',
           description: 'Pasta con crema, huevo, panceta y queso parmesano.',
           customizations: [
             { text: 'Tipo de pasta', value: 'tipo_de_pasta', options: ['Espaguetis', 'Fettuccine', 'Penne'] },
@@ -121,6 +122,17 @@ export const Menu = () => {
   ]
 
   const [activeTab, setActiveTab] = useState(menu[0])
+  const [modalState, setModalState] = useState(false)
+  const [selectDish, setSelectDish] = useState(null)
+
+  const updateModalState = (newState) => {
+    setModalState(newState)
+  }
+
+  const openModalState = (dish) => {
+    setModalState(true)
+    setSelectDish(dish)
+  }
 
   return (
     <>
@@ -146,12 +158,18 @@ export const Menu = () => {
             <ul className='menu--dishes'>
               {
                     activeTab?.dishes.map((d) => (
-                      <CardMenu key={d.id} data={d} />
+                      <CardMenu key={d.id} data={d} addAction={openModalState} />
                     ))
                 }
             </ul>
           </div>
         </div>
+        {modalState && (
+          <ModalPlatillo
+            modalState={updateModalState}
+            dish={selectDish}
+          />
+        )}
       </NavbarProvider>
     </>
   )

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const CardMenu = ({ data }) => {
+export const CardMenu = ({ data, addAction }) => {
   return (
     <>
       <li className='menu--card'>
@@ -10,7 +10,7 @@ export const CardMenu = ({ data }) => {
             {data.name}
           </h3>
           <p className='menu--card-description'>{data.description}</p>
-          <button className='menu--btn-add'>
+          <button className='menu--btn-add' onClick={() => addAction(data)}>
             Agregar al carrito
           </button>
         </div>
