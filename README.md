@@ -2,7 +2,7 @@
 
 ## 📌 Introducción
 
-Este proyecto es parte del reto final de la beca otorgada por **Bécalos** y **DEV.F**, con la guía de nuestro Sensei **Andrés Sánchez**. Desarrollaremos una **aplicación web** para un restaurante de comida italiana, que permitirá a los clientes **reservar mesas**, **hacer pedidos en línea**, y **personalizar sus platillos** según alergias o preferencias personales.
+Este proyecto es parte del reto final de la beca otorgada por **Bécalos** y **DEV.F**, con la guía de nuestro Sensei **Andrés Sánchez**. Desarrollaremos una **aplicación web** para un restaurante de comida italiana, que permitirá a los clientes  **hacer pedidos en línea**, y **personalizar sus platillos** según alergias o preferencias personales.
 
 ## 🧑‍🤝‍🧑 Dinámica de Trabajo
 

@@ -8,13 +8,7 @@
   Entre las principales necesidades que nos compartió se encuentran:
   <ul>
     <li><strong>Registro de clientes</strong> para que puedan tener una cuenta y acceder a pedidos y reservas personalizadas.</li>
-    <li><strong>Reservas en línea</strong> para evitar saturación del restaurante y organizar mejor los turnos.</li>
     <li><strong>Pedidos a domicilio</strong> de forma digital, evitando llamadas telefónicas.</li>
     <li><strong>Personalización de platillos</strong> por alergias o gustos personales.</li>
   </ul>
 </p>
-
-- **Registro de clientes** para que puedan tener una cuenta y acceder a pedidos y reservas personalizadas.
-- **Reservas en línea** para evitar saturación del restaurante y organizar mejor los turnos.
-- **Pedidos a domicilio** de forma digital, evitando llamadas telefónicas.
-- **Personalización de platillos** por alergias o gustos personales.
