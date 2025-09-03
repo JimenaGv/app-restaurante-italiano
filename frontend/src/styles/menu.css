@@ -182,3 +182,28 @@
 .modal-btn-cancel:hover{
     background-color: transparent;
 }
+
+.quantity-container{
+	margin-top: 1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.quantity-controls{
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.quantity-controls span{
+	font-size: 1.6rem;
+}
+
+.quantity-controls button{
+    margin: 0;
+    font-size: 1rem;
+    padding: 0;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.3rem;
+}

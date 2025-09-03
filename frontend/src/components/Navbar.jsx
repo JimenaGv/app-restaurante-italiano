@@ -1,9 +1,11 @@
 import { useNavbar } from '../context/navbarContext'
+import { useCarrito } from '../context/carrito'
 import '../styles/navbar.css'
 import { Link } from 'react-router-dom'
 
 export const Navbar = () => {
   const { isLoggedIn, login, logout } = useNavbar()
+  const { totalPlatillos } = useCarrito()
 
   return (
     <nav className='navbar'>
@@ -32,7 +34,14 @@ export const Navbar = () => {
           isLoggedIn
             ? (
               <>
-                <button className='icon-btn'><img src='https://img.icons8.com/?size=100&id=0DBkCUANmgoQ&format=png&color=000000' alt='' /></button>
+
+                <button className='icon-btn icon-carrito'>
+                  <img src='https://img.icons8.com/?size=100&id=0DBkCUANmgoQ&format=png&color=000000' alt='' />
+                  <span className='carrito-badge'>
+                    {totalPlatillos}
+                  </span>
+                </button>
+
                 <Link to='/perfil'>
                   <img
                     src='https://i.pravatar.cc/50'

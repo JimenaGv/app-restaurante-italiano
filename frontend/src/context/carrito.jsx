@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react'
+import React, { createContext, useState, useContext, useMemo } from 'react'
 
 const CarritoContext = createContext()
 
@@ -21,12 +21,17 @@ export const CarritoProvider = ({ children }) => {
     )
   }
 
+  const totalPlatillos = useMemo(() => {
+    return carrito.length
+  }, [carrito])
+
   return (
-    <CarritoContext.Provider value={{ carrito, agregarItem, eliminarItem, actualizarCantidad }}>
+    <CarritoContext.Provider value={{ carrito, agregarItem, eliminarItem, actualizarCantidad, totalPlatillos }}>
       {children}
     </CarritoContext.Provider>
   )
 }
 
 // Hook para consumir el contexto
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCarrito = () => useContext(CarritoContext)

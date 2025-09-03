@@ -1,7 +1,6 @@
 import '../styles/global.css'
 import '../styles/menu.css'
 import React, { useState } from 'react'
-import { NavbarProvider } from '../context/navbarContext'
 import { CardMenu } from '../components/menu/CardMenu'
 import { ModalPlatillo } from '../components/menu/ModalPlatillo'
 
@@ -136,41 +135,39 @@ export const Menu = () => {
 
   return (
     <>
-      <NavbarProvider>
-        <div className='page'>
-          <h2 className='menu--title title'>Nuestro Menú</h2>
+      <div className='page'>
+        <h2 className='menu--title title'>Nuestro Menú</h2>
 
-          <div className='menu--category-tabs-container'>
-            {menu.map((c) => (
-              <button
-                key={c.value}
-                className={`menu--category-tab ${c.value === activeTab.value ? 'active' : ''}`}
-                onClick={() => setActiveTab(c)}
-              >
-                {c.text}
-              </button>
-            ))}
-          </div>
+        <div className='menu--category-tabs-container'>
+          {menu.map((c) => (
+            <button
+              key={c.value}
+              className={`menu--category-tab ${c.value === activeTab.value ? 'active' : ''}`}
+              onClick={() => setActiveTab(c)}
+            >
+              {c.text}
+            </button>
+          ))}
+        </div>
 
-          <div className='menu--dishes-container'>
-            <h2 className='menu--category-title'>{activeTab.text}</h2>
+        <div className='menu--dishes-container'>
+          <h2 className='menu--category-title'>{activeTab.text}</h2>
 
-            <ul className='menu--dishes'>
-              {
+          <ul className='menu--dishes'>
+            {
                     activeTab?.dishes.map((d) => (
                       <CardMenu key={d.id} data={d} addAction={openModalState} />
                     ))
                 }
-            </ul>
-          </div>
+          </ul>
         </div>
-        {modalState && (
-          <ModalPlatillo
-            modalState={updateModalState}
-            dish={selectDish}
-          />
-        )}
-      </NavbarProvider>
+      </div>
+      {modalState && (
+        <ModalPlatillo
+          modalState={updateModalState}
+          dish={selectDish}
+        />
+      )}
     </>
   )
 }
