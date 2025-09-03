@@ -6,7 +6,14 @@ export const CarritoProvider = ({ children }) => {
   const [carrito, setCarrito] = useState([])
 
   const agregarItem = (item) => {
-    setCarrito((prevCarrito) => [...prevCarrito, item])
+    const itemExistente = carrito.find(i => i.id === item.id)
+    const esIgual = itemExistente && JSON.stringify(itemExistente?.customizations) === JSON.stringify(item?.customizations)
+
+    if (esIgual) {
+      actualizarCantidad(item.id, item.cantidad + itemExistente.cantidad)
+    } else {
+      setCarrito((prevCarrito) => [...prevCarrito, item])
+    }
   }
 
   const eliminarItem = (id) => {
