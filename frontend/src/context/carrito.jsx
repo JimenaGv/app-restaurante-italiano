@@ -16,8 +16,18 @@ export const CarritoProvider = ({ children }) => {
     }
   }
 
-  const eliminarItem = (id) => {
-    setCarrito((prevCarrito) => prevCarrito.filter((item) => item.id !== id))
+  const eliminarItem = (item) => {
+    const itemIndex = carrito.findIndex(
+      (i) =>
+        i.id === item.id &&
+      JSON.stringify(i.customizations) === JSON.stringify(item.customizations)
+    )
+
+    if (itemIndex >= 0) {
+      setCarrito((prevCarrito) =>
+        prevCarrito.filter((_, index) => index !== itemIndex)
+      )
+    }
   }
 
   const actualizarCantidad = (id, cantidad) => {

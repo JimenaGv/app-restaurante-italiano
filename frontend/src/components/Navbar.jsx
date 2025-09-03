@@ -35,12 +35,14 @@ export const Navbar = () => {
             ? (
               <>
 
-                <button className='icon-btn icon-carrito'>
-                  <img src='https://img.icons8.com/?size=100&id=0DBkCUANmgoQ&format=png&color=000000' alt='' />
-                  <span className='carrito-badge'>
-                    {totalPlatillos}
-                  </span>
-                </button>
+                <Link to='/carrito'>
+                  <button className='icon-btn icon-carrito'>
+                    <img src='https://img.icons8.com/?size=100&id=0DBkCUANmgoQ&format=png&color=000000' alt='' />
+                    <span className='carrito-badge'>
+                      {totalPlatillos}
+                    </span>
+                  </button>
+                </Link>
 
                 <Link to='/perfil'>
                   <img
