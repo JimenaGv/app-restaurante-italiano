@@ -22,9 +22,7 @@ export const UserProfile = () => {
   return (
     <NavbarProvider>
       <div className="page">
-        {/* Navbar */}
-        <Navbar />
-
+      
         <div className="container">
           {/* Sidebar */}
           <aside className="sidebar">
