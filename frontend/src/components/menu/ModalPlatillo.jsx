@@ -57,7 +57,7 @@ export const ModalPlatillo = ({ modalState, dish }) => {
                 <label>{customization?.text}</label>
                 <select
                   name={customization?.value}
-                  value={dishCustom.customizations[customization.value]}
+                  value={dishCustom.customizations[customization.value] ?? ''}
                   onChange={($e) => handleSelectChange(customization.value, $e.target.value)}
                 >
                   {customization?.options.map((option, i) => (
@@ -65,6 +65,7 @@ export const ModalPlatillo = ({ modalState, dish }) => {
                       {option}
                     </option>
                   ))}
+                  <option value=''> --- </option>
                 </select>
               </div>
             )
