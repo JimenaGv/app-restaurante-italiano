@@ -40,7 +40,7 @@ export const ModalPlatillo = ({ modalState, dish }) => {
   }
 
   return (
-    <div className='modal-dish'>
+    <div className='modal-dish' onClick={() => modalState(false)}>
       <div className='modal-content'>
         <div className='modal-header' style={{ backgroundImage: `url(${dish?.image})` }}>
           <h3 className='modal-title'>
