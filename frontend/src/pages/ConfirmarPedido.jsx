@@ -86,8 +86,8 @@ export const ConfirmarPedido = () => {
       const pedidoConId = await res.json() // Obtener el _id desde el backend
 
       iniciarFlujoDePedido(pedidoConId._id)
-      limpiarCarrito()
       navigate('/pedido-confirmado', { state: { pedido: pedidoConId } }) // Pasar con el _id incluido
+      setTimeout(() => limpiarCarrito(), 100)
     } catch (error) {
       console.error(error)
       alert('Lo sentimos, hubo un problema al confirmar tu pedido. Por favor, inténtalo de nuevo.')
