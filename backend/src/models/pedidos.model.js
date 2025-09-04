@@ -10,17 +10,24 @@ const pedidosSchema = new mongoose.Schema({
   platillos: [{
     nombre: String,
     cantidad: Number,
-    precio: Number
+    precio: Number,
+    customizations: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {}
+    }
   }],
   direccion: String,
   metodoPago: String,
   estado: {
     type: String,
-    default: 'En preparación'
+    default: 'Solicitud recibida'
   },
   fecha: {
     type: Date,
     default: Date.now
+  },
+  tiempoEntrega: {
+    type: Number
   }
 })
 

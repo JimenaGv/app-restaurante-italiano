@@ -41,7 +41,7 @@ export const ModalPlatillo = ({ modalState, dish }) => {
 
   return (
     <div className='modal-dish' onClick={() => modalState(false)}>
-      <div className='modal-content'>
+      <div className='modal-content' onClick={(e) => e.stopPropagation()}>
         <div className='modal-header' style={{ backgroundImage: `url(${dish?.image})` }}>
           <h3 className='modal-title'>
             <span className='modal-price'> ${dish.price} - </span>

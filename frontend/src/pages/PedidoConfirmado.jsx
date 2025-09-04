@@ -1,7 +1,12 @@
 // Página que anuncia la confirmación del pedido y permite volver a la página de inicio o ver el historial de pedidos
 import '../styles/global.css'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export const PedidoConfirmado = () => {
+  const location = useLocation()
+  const pedido = location.state?.pedido
+  const navigate = useNavigate()
+
   return (
     <>
       <div className='contenedor'>
@@ -11,16 +16,18 @@ export const PedidoConfirmado = () => {
         </div>
         <div className='division costos'>
           <p>Número de orden</p>
-          <span>#483294</span>
+          <span>{pedido?._id?.slice(-6)}</span>
         </div>
         <div className='division espacio-abajo'>
           <p>Tiempo estimado de entrega</p>
-          <span>30-45 minutos</span>
+          <span>{pedido?.tiempoEntrega} minutos</span>
         </div>
       </div>
       <div className='caja-botones'>
-        <button>Ver historial de pedidos</button>
-        <button>Volver al menú</button>
+        <button onClick={() => navigate('/perfil', { state: { section: 'pedidos' } })}>
+          Ver historial de pedidos
+        </button>
+        <button onClick={() => navigate('/')}>Volver al inicio</button>
       </div>
     </>
   )
