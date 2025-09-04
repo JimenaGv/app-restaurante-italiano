@@ -28,4 +28,17 @@ pedidosRouter.get('/:usuarioId', async (req, res) => {
   }
 })
 
+// Actualizar estado del pedido
+pedidosRouter.patch('/:id/estado', async (req, res) => {
+  try {
+    const { id } = req.params
+    const { estado } = req.body
+    const actualizado = await Pedidos.findByIdAndUpdate(id, { estado }, { new: true })
+    res.json(actualizado)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+
 export default pedidosRouter
