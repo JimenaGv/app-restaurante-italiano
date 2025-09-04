@@ -16,7 +16,7 @@ export const ConfirmarPedido = () => {
   const direccionSeleccionada = 'Calle Falsa 123'
   const metodoSeleccionado = 'Tarjeta'
   //
-  const { carrito } = useCarrito()
+  const { carrito, limpiarCarrito } = useCarrito()
 
   const navigate = useNavigate()
 
@@ -86,6 +86,7 @@ export const ConfirmarPedido = () => {
       const pedidoConId = await res.json() // Obtener el _id desde el backend
 
       iniciarFlujoDePedido(pedidoConId._id)
+      limpiarCarrito()
       navigate('/pedido-confirmado', { state: { pedido: pedidoConId } }) // Pasar con el _id incluido
     } catch (error) {
       console.error(error)
