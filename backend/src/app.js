@@ -11,7 +11,11 @@ config()
 const PORT = process.env.PORT
 const app = express()
 
-app.use(cors())
+app.use(cors(/* {
+  origin: "https://app-restaurante-italiano-q16i.vercel.app/"
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+} */))
 app.use(express.json())
 
 // Ruta de prueba
