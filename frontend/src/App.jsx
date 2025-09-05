@@ -8,6 +8,8 @@ import { PedidoConfirmado } from './pages/PedidoConfirmado'
 import { HistorialPedidos } from './pages/HistorialPedidos'
 import { NotFound } from './pages/NotFound'
 import { Menu } from './pages/Menu'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 export const App = () => {
   return (
@@ -18,6 +20,8 @@ export const App = () => {
           {/* Ruta para perfil */}
           <Route path='/perfil' element={<UserProfile />} />
           <Route path='/' element={<Home />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
           <Route path='/confirmacion-pedido' element={<ConfirmarPedido />} />
           <Route path='/menu' element={<Menu />} />
           <Route path='/pedido-confirmado' element={<PedidoConfirmado />} />
@@ -27,6 +31,5 @@ export const App = () => {
         </Routes>
       </BrowserRouter>
     </NavbarProvider>
-
   )
 }
