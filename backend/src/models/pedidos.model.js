@@ -2,9 +2,8 @@ import mongoose from 'mongoose'
 
 const pedidosSchema = new mongoose.Schema({
   usuarioId: {
-    /* type: mongoose.Schema.Types.ObjectId, */
-    /* ref: 'User', */
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
   platillos: [{

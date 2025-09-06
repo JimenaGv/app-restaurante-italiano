@@ -20,7 +20,9 @@ const infoPerfilSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  
+  profileImage: { // Para guardar la imagen de perfil
+    type: String
+  }
 })
 
-export default mongoose.model('InfoPerfil', infoPerfilSchema)
+export const User = mongoose.model('infoPerfil', infoPerfilSchema)

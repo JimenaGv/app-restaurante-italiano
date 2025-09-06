@@ -12,10 +12,12 @@ import { Pago } from '../components/pedidos/Pago'
 
 export const ConfirmarPedido = () => {
   // Valores temporales para pruebas
-  const user = { id: 'user123' }
   const direccionSeleccionada = 'Calle Falsa 123'
   const metodoSeleccionado = 'Tarjeta'
   //
+  const usuario = JSON.parse(localStorage.getItem('usuario'))
+  const userId = usuario?.id
+
   const { carrito, limpiarCarrito } = useCarrito()
 
   const navigate = useNavigate()
@@ -60,7 +62,7 @@ export const ConfirmarPedido = () => {
 
   const handleConfirmarPedido = async () => {
     const pedidoSinId = {
-      usuarioId: user.id,
+      usuarioId: userId,
       platillos: carrito.map(item => ({
         nombre: item.name,
         cantidad: item.quantity,
@@ -86,8 +88,8 @@ export const ConfirmarPedido = () => {
       const pedidoConId = await res.json() // Obtener el _id desde el backend
 
       iniciarFlujoDePedido(pedidoConId._id)
-      limpiarCarrito()
       navigate('/pedido-confirmado', { state: { pedido: pedidoConId } }) // Pasar con el _id incluido
+      setTimeout(() => limpiarCarrito(), 100)
     } catch (error) {
       console.error(error)
       alert('Lo sentimos, hubo un problema al confirmar tu pedido. Por favor, inténtalo de nuevo.')

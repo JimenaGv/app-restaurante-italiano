@@ -1,0 +1,138 @@
+.auth-page-container {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-container {
+  background-color: white;
+  border-radius: 15px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-header h1 {
+  font-size: 24px;
+  font-weight: 400;
+  color: #333;
+  margin: 0;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 400;
+}
+
+.form-group input {
+  padding: 15px;
+  border: none;
+  background-color: #f0f0f5;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+  font-family: inherit;
+}
+
+.form-group input:focus {
+  outline: none;
+  background-color: #e8e8ed;
+}
+
+.form-group input.error {
+  background-color: #fef2f2;
+  border: 1px solid #ea2a33;
+}
+
+.error-message {
+  color: #ea2a33;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.error-banner {
+  background-color: #fef2f2;
+  color: #ea2a33;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.submit-btn {
+  background-color: #ea2a33;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+  font-family: inherit;
+  transition: background-color 0.2s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #c53030;
+}
+
+.submit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.auth-footer p {
+  color: #999;
+  font-size: 14px;
+  margin: 0;
+}
+
+.toggle-link {
+  color: #ea2a33;
+  text-decoration: underline;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.toggle-link:hover {
+  color: #c53030;
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 30px 20px;
+    margin: 10px;
+  }
+}
