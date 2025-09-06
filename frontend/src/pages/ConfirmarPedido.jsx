@@ -12,10 +12,12 @@ import { Pago } from '../components/pedidos/Pago'
 
 export const ConfirmarPedido = () => {
   // Valores temporales para pruebas
-  const user = { id: 'user123' }
   const direccionSeleccionada = 'Calle Falsa 123'
   const metodoSeleccionado = 'Tarjeta'
   //
+  const usuario = JSON.parse(localStorage.getItem('usuario'))
+  const userId = usuario?.id
+
   const { carrito, limpiarCarrito } = useCarrito()
 
   const navigate = useNavigate()
@@ -60,7 +62,7 @@ export const ConfirmarPedido = () => {
 
   const handleConfirmarPedido = async () => {
     const pedidoSinId = {
-      usuarioId: user.id,
+      usuarioId: userId,
       platillos: carrito.map(item => ({
         nombre: item.name,
         cantidad: item.quantity,
