@@ -1,59 +1,68 @@
-import React, { useState } from "react";
-import "../styles/perfil.css";
-import { Navbar } from "../components/Navbar";
-import { NavbarProvider } from "../context/navbarContext";
-import { ProfileForm } from "../components/perfil/ProfileForm";
-import { Orders } from "../components/perfil/Orders";
-import { PaymentMethods } from "../components/perfil/PaymentMethods";
+import { useEffect, useState } from 'react'
+import '../styles/perfil.css'
+import { NavbarProvider } from '../context/navbarContext'
+import { ProfileForm } from '../components/perfil/ProfileForm'
+import { Orders } from '../components/perfil/Orders'
+import { PaymentMethods } from '../components/perfil/PaymentMethods'
+import { useLocation } from 'react-router-dom'
 
 export const UserProfile = () => {
-  const [activeSection, setActiveSection] = useState("perfil");
-  const [avatar, setAvatar] = useState("../public/fotoUsuario.png"); // valor inicial
+  const [activeSection, setActiveSection] = useState('perfil')
+  const [avatar, setAvatar] = useState('../public/fotoUsuario.png') // valor inicial
 
   // manejar carga de imagen
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setAvatar(imageUrl);
+      const imageUrl = URL.createObjectURL(file)
+      setAvatar(imageUrl)
     }
-  };
+  }
+
+  // dirigir al historial de pedidos automáticamente
+  const location = useLocation()
+
+  useEffect(() => {
+    if (location.state?.section) {
+      setActiveSection(location.state.section)
+    }
+  }, [location.state])
 
   return (
     <NavbarProvider>
-      <div className="page">
-      
-        <div className="container">
+      <div className='page'>
+
+        <div className='container'>
           {/* Sidebar */}
-          <aside className="sidebar">
-            <label htmlFor="avatar-upload" className="avatar-wrapper">
-              <img src={avatar} alt="Avatar" className="avatar-lg" />
+          <aside className='sidebar'>
+            <label htmlFor='avatar-upload' className='avatar-wrapper'>
+              <img src={avatar} alt='Avatar' className='avatar-lg' />
               <input
-                id="avatar-upload"
-                type="file"
-                accept="image/*"
+                id='avatar-upload'
+                type='file'
+                accept='image/*'
                 onChange={handleImageChange}
-                style={{ display: "none" }}
+                style={{ display: 'none' }}
               />
             </label>
-            <h2 className="username">Sophia Rossi</h2>
+            <h2 className='username'>Sophia Rossi</h2>
 
-            <nav className="sidebar-links">
+            <nav className='sidebar-links'>
               <button
-                className={activeSection === "perfil" ? "active" : ""}
-                onClick={() => setActiveSection("perfil")}
+                className={activeSection === 'perfil' ? 'active' : ''}
+                onClick={() => setActiveSection('perfil')}
               >
                 Perfil
               </button>
               <button
-                className={activeSection === "pedidos" ? "active" : ""}
-                onClick={() => setActiveSection("pedidos")}
+                className={activeSection === 'pedidos' ? 'active' : ''}
+                onClick={() => setActiveSection('pedidos')}
               >
                 Pedidos
               </button>
               <button
-                className={activeSection === "pagos" ? "active" : ""}
-                onClick={() => setActiveSection("pagos")}
+                className={activeSection === 'pagos' ? 'active' : ''}
+                onClick={() => setActiveSection('pagos')}
               >
                 Métodos de Pago
               </button>
@@ -61,13 +70,13 @@ export const UserProfile = () => {
           </aside>
 
           {/* Informacion cada perfil */}
-          <main className="content">
-            {activeSection === "perfil" && <ProfileForm />}
-            {activeSection === "pedidos" && <Orders />}
-            {activeSection === "pagos" && <PaymentMethods />}
+          <main className='content'>
+            {activeSection === 'perfil' && <ProfileForm />}
+            {activeSection === 'pedidos' && <Orders />}
+            {activeSection === 'pagos' && <PaymentMethods />}
           </main>
         </div>
       </div>
     </NavbarProvider>
-  );
-};
+  )
+}

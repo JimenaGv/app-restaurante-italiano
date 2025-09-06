@@ -8,13 +8,13 @@ import { User } from './models/infoPerfil.model.js'
 import pedidosRouter from './routes/pedidos.routes.js'
 import perfilRouter from './routes/infoPerfil.routes.js'
 
+import menuRouter from './routes/menu.routes.js'
+import authRouter from './routes/auth.routes.js'
+
 config()
 
 const PORT = process.env.PORT
 const app = express()
-
-app.use(cors())
-app.use(express.json())
 
 // Configuracion de Multer par Subir imagen de perfil
 const storage = multer.diskStorage({
@@ -49,12 +49,17 @@ app.post('/api/users/:id/profile-image', upload.single('profileImage'), async (r
 app.use('/uploads', express.static('uploads'))
 
 // *********************************************************************
+app.use(cors(/* {
+  origin: "https://app-restaurante-italiano-q16i.vercel.app/"
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+} */))
+app.use(express.json())
 
 // Ruta de prueba
 app.get('/api/hola', (req, res) => {
   res.json({ mensaje: '¡Hola desde el backend!' })
 })
-// Conexión con MongoDB
 mongoose
   .connect(process.env.MONGO_KEY)
   .then(() => console.log('Conectado a MongoDB'))
@@ -64,5 +69,9 @@ app.listen(PORT, () => {
   console.log('Servidor corriendo en el puerto', PORT)
 })
 
+app.use('/api/perfil', perfilRouter)
+app.use('/pedidos', pedidosRouter)
+app.use('/menu', menuRouter)
+app.use('/api', authRouter)
 app.use('/api/perfil', perfilRouter)
 app.use('/pedidos', pedidosRouter)

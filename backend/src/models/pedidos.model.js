@@ -2,25 +2,31 @@ import mongoose from 'mongoose'
 
 const pedidosSchema = new mongoose.Schema({
   usuarioId: {
-    /* type: mongoose.Schema.Types.ObjectId, */
-    /* ref: 'User', */
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
   platillos: [{
     nombre: String,
     cantidad: Number,
-    precio: Number
+    precio: Number,
+    customizations: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {}
+    }
   }],
   direccion: String,
   metodoPago: String,
   estado: {
     type: String,
-    default: 'En preparación'
+    default: 'Solicitud recibida'
   },
   fecha: {
     type: Date,
     default: Date.now
+  },
+  tiempoEntrega: {
+    type: Number
   }
 })
 

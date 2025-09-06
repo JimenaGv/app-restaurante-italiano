@@ -51,6 +51,10 @@ h3 {
   background-color: white;
 }
 
+.con-boton button:hover {
+  color: rgb(255, 255, 255);
+}
+
 /* Texto en negritas */
 span {
  font-weight: 500;
@@ -103,4 +107,36 @@ li {
 
 .centrado {
   text-align: center;
+}
+
+.carrito--notes{
+    display: flex;
+    flex-direction: column;
+    color: gray;
+    padding-left: 10px;
+}
+
+.cont-historial {
+  padding: 20px;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
+  background-color: white;
+}
+
+.cont-historial ul {
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
+.cont-historial li {
+  flex-direction: column;
+}
+
+.cont-historial span {
+  font-size: large;
+}
+
+.rojo {
+  color: #c53030;
 }

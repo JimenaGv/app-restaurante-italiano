@@ -1,43 +1,95 @@
 // Página de confirmación de pedidos
-// Resumen del pedido
-// Dirección de entrega
-// Método de pago
-// Botón de confirmación
-
 import '../styles/global.css'
-
 import { useNavigate } from 'react-router-dom'
 
-// Valores temporales para pruebas
-const user = { id: 'user123' }
-const carrito = [
-  { nombre: 'Pizza Margarita', cantidad: 2, precio: 70 },
-  { nombre: 'Tiramisú', cantidad: 1, precio: 40 }
-]
-const direccionSeleccionada = 'Calle Falsa 123'
-const metodoSeleccionado = 'Tarjeta'
-//
+import { useCarrito } from '../context/carrito'
+// Resumen del pedido
+import { ResumenPedido } from '../components/pedidos/ResumenPedido'
+// Dirección de entrega
+import { Entrega } from '../components/pedidos/Entrega'
+// Método de pago
+import { Pago } from '../components/pedidos/Pago'
 
 export const ConfirmarPedido = () => {
+  // Valores temporales para pruebas
+  const direccionSeleccionada = 'Calle Falsa 123'
+  const metodoSeleccionado = 'Tarjeta'
+  //
+  const usuario = JSON.parse(localStorage.getItem('usuario'))
+  const userId = usuario?.id
+
+  const { carrito, limpiarCarrito } = useCarrito()
+
   const navigate = useNavigate()
 
+  const getRandomIntInclusive = (min, max) =>
+    Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1) + Math.ceil(min))
+
+  const subtotal = carrito.reduce((acc, item) => acc + item.price * item.quantity, 0)
+  const iva = subtotal * 0.16
+  const tarifa = getRandomIntInclusive(10, 50)
+  const total = subtotal + iva + tarifa
+  const tiempoRandom = getRandomIntInclusive(25, 60)
+
+  const iniciarFlujoDePedido = (pedidoId) => {
+    const estados = [
+      { nombre: 'Solicitud recibida', tiempo: getRandomIntInclusive(5000, 10000) },
+      { nombre: 'En preparación', tiempo: getRandomIntInclusive(20000, 30000) },
+      { nombre: 'Listo para ser enviado', tiempo: getRandomIntInclusive(5000, 10000) },
+      { nombre: 'Enviado', tiempo: getRandomIntInclusive(30000, 50000) },
+      { nombre: 'Entregado', tiempo: 0 }
+    ]
+
+    let etapa = 0
+
+    const avanzarEstado = () => {
+      const { nombre, tiempo } = estados[etapa]
+      fetch(`http://localhost:3000/pedidos/${pedidoId}/estado`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado: nombre })
+      })
+
+      if (etapa < estados.length - 1) {
+        setTimeout(avanzarEstado, tiempo)
+      }
+
+      etapa++
+    }
+
+    avanzarEstado()
+  }
+
   const handleConfirmarPedido = async () => {
-    const pedido = {
-      usuarioId: user.id,
-      platillos: carrito,
+    const pedidoSinId = {
+      usuarioId: userId,
+      platillos: carrito.map(item => ({
+        nombre: item.name,
+        cantidad: item.quantity,
+        precio: item.price,
+        customizations: item.customizations || {}
+      })),
       direccion: direccionSeleccionada,
       metodoPago: metodoSeleccionado,
-      estado: 'pendiente',
-      fecha: new Date().toISOString()
+      estado: 'Solicitud recibida',
+      fecha: new Date().toISOString(),
+      tiempoEntrega: tiempoRandom
     }
+
     try {
-      const res = await fetch('/pedidos', {
+      const res = await fetch('http://localhost:3000/pedidos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pedido)
+        body: JSON.stringify(pedidoSinId)
       })
+
       if (!res.ok) throw new Error('Error al confirmar el pedido.')
-      navigate('/pedido-confirmado')
+
+      const pedidoConId = await res.json() // Obtener el _id desde el backend
+
+      iniciarFlujoDePedido(pedidoConId._id)
+      navigate('/pedido-confirmado', { state: { pedido: pedidoConId } }) // Pasar con el _id incluido
+      setTimeout(() => limpiarCarrito(), 100)
     } catch (error) {
       console.error(error)
       alert('Lo sentimos, hubo un problema al confirmar tu pedido. Por favor, inténtalo de nuevo.')
@@ -50,69 +102,12 @@ export const ConfirmarPedido = () => {
         <h1>Resumen del pedido</h1>
         <p>Revisa tu pedido y confirma para realizar la compra.</p>
       </div>
-      <div className='contenedor'>
-        <div>
-          <h3>Artículos del pedido</h3>
-          <ul>
-            <li>
-              <div>
-                <span>Pizza Margarita</span>
-                <p>Cantidad: 2</p>
-              </div>
-              <div>
-                <p>$70</p>
-              </div>
-            </li>
-            <li>
-              <div>
-                <span>Tiramisú</span>
-                <p>Cantidad: 1</p>
-              </div>
-              <div>
-                <p>$40</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div className='costos'>
-          <div className='division'>
-            <p>Subtotal</p>
-            <p>$110</p>
-          </div>
-          <div className='division'>
-            <p>Impuestos</p>
-            <p>$10</p>
-          </div>
-          <div className='division'>
-            <p>Tarifa de entrega</p>
-            <p>$20</p>
-          </div>
-          <div className='division'>
-            <h4>Total</h4>
-            <h4>$140</h4>
-          </div>
-        </div>
-      </div>
-      <div className='contenedor con-boton'>
-        <h3>Detalles de la entrega</h3>
-        <div>
-          <p>Dirección</p>
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat, eius.</p>
-        </div>
-        <div className='division'>
-          <p>Tiempo estimado</p>
-          <p>30-45 minutos</p>
-        </div>
-        <button>Cambiar</button>
-      </div>
-      <div className='contenedor con-boton'>
-        <h3>Método de pago</h3>
-        <p>Tarjeta</p>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat, eius.</p>
-        <button>Cambiar</button>
-      </div>
+      <ResumenPedido carrito={carrito} subtotal={subtotal} iva={iva} tarifa={tarifa} total={total} />
+      <Entrega direccion={direccionSeleccionada} tiempo={tiempoRandom} />
+      <Pago metodo={metodoSeleccionado} />
+
       <div className='caja-botones'>
-        <button>Regresar al carrito</button>
+        <button onClick={() => navigate('/carrito')}>Regresar al carrito</button>
         <button onClick={handleConfirmarPedido}>Confirmar pedido</button>
       </div>
     </>

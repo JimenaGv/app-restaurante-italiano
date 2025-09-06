@@ -1,30 +1,53 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Navbar } from './components/Navbar'
 import { NavbarProvider } from './context/navbarContext'
+import { CarritoProvider, useCarrito } from './context/carrito'
 import { UserProfile } from './pages/Perfil'
 import { Home } from './pages/Home'
 import { ConfirmarPedido } from './pages/ConfirmarPedido'
-import { PedidoConfirmado } from './pages/PedidoConfirmado'
-import { HistorialPedidos } from './pages/HistorialPedidos'
 import { NotFound } from './pages/NotFound'
+import { Menu } from './pages/Menu'
+import { Carrito } from './pages/Carrito'
+import { RutaProtegida } from './components/RutaProtegida'
+import { PedidoConfirmadoWrapper } from './components/pedidos/PedidoConfirmadoWrapper'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 export const App = () => {
   return (
     <NavbarProvider>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          {/* Ruta para perfil */}
-          <Route path='/perfil' element={<UserProfile />} />
-          <Route path='/' element={<Home />} />
-          <Route path='/confirmacion-pedido' element={<ConfirmarPedido />} />
-          <Route path='/pedido-confirmado' element={<PedidoConfirmado />} />
-          <Route path='/historial' element={<HistorialPedidos />} />
-          {/* Página para rutas no establecidas */}
-          <Route path='*' element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <CarritoProvider>
+        <AppRoutes />
+      </CarritoProvider>
     </NavbarProvider>
+  )
+}
 
+const AppRoutes = () => {
+  const { carrito } = useCarrito()
+  const canAccessPedido = carrito.length > 0
+
+  return (
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/perfil' element={<UserProfile />} />
+        <Route path='/' element={<Home />} />
+        <Route
+          path='/confirmacion-pedido'
+          element={
+            <RutaProtegida canAccess={canAccessPedido} redirectTo='/'>
+              <ConfirmarPedido />
+            </RutaProtegida>
+          }
+        />
+        <Route path='/menu' element={<Menu />} />
+        <Route path='/carrito' element={<Carrito />} />
+        <Route path='/pedido-confirmado' element={<PedidoConfirmadoWrapper />} />
+        <Route path='*' element={<NotFound />} /> {/* Página para rutas no establecidas */}
+      </Routes>
+    </BrowserRouter>
   )
 }
