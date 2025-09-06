@@ -40,5 +40,4 @@ pedidosRouter.patch('/:id/estado', async (req, res) => {
   }
 })
 
-
 export default pedidosRouter
