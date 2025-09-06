@@ -1,6 +1,8 @@
 import React from 'react'
+import { useNavbar } from '../../context/navbarContext'
 
 export const CardMenu = ({ data, addAction }) => {
+  const { isLoggedIn } = useNavbar()
   return (
     <>
       <li className='menu--card'>
@@ -10,9 +12,10 @@ export const CardMenu = ({ data, addAction }) => {
             {data.name}
           </h3>
           <p className='menu--card-description'>{data.description}</p>
-          <button className='menu--btn-add' onClick={() => addAction(data)}>
-            Agregar al carrito
-          </button>
+          {isLoggedIn &&
+            (<button className='menu--btn-add' onClick={() => addAction(data)}>
+              Agregar al carrito
+            </button>)}
         </div>
         <img src={data.image} alt={data.name} className='menu--card-image' />
       </li>
