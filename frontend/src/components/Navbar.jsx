@@ -46,7 +46,9 @@ export const Navbar = () => {
           <li>Menú</li>
         </Link>
         <li>Ubicación</li>
-        <li>Historia</li>
+        <Link to='/historia'>
+          <li>Historia</li>
+        </Link>
         <li>Contacto</li>
       </ul>
 
