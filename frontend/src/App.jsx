@@ -10,6 +10,8 @@ import { Menu } from './pages/Menu'
 import { Carrito } from './pages/Carrito'
 import { RutaProtegida } from './components/RutaProtegida'
 import { PedidoConfirmadoWrapper } from './components/pedidos/PedidoConfirmadoWrapper'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 export const App = () => {
   return (
@@ -29,6 +31,8 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Navbar />
       <Routes>
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
         <Route path='/perfil' element={<UserProfile />} />
         <Route path='/' element={<Home />} />
         <Route

@@ -5,6 +5,7 @@ import { config } from 'dotenv'
 import pedidosRouter from './routes/pedidos.routes.js'
 import perfilRouter from './routes/infoPerfil.routes.js'
 import menuRouter from './routes/menu.routes.js'
+import authRouter from './routes/auth.routes.js'
 
 config()
 
@@ -22,6 +23,7 @@ app.use(express.json())
 app.get('/api/hola', (req, res) => {
   res.json({ mensaje: '¡Hola desde el backend!' })
 })
+
 mongoose
   .connect(process.env.MONGO_KEY)
   .then(() => console.log('Conectado a MongoDB'))
@@ -33,3 +35,6 @@ app.listen(PORT, () => {
 app.use('/api/perfil', perfilRouter)
 app.use('/pedidos', pedidosRouter)
 app.use('/menu', menuRouter)
+app.use('/api', authRouter)
+app.use('/api/perfil', perfilRouter)
+app.use('/pedidos', pedidosRouter)

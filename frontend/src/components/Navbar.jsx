@@ -2,9 +2,31 @@ import { useNavbar } from '../context/navbarContext'
 import { useCarrito } from '../context/carrito'
 import '../styles/navbar.css'
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 
 export const Navbar = () => {
-  const { isLoggedIn, login, logout } = useNavbar()
+  const { isLoggedIn, logout } = useNavbar()
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const userData = localStorage.getItem('usuario')
+    if (userData && isLoggedIn) {
+      try {
+        setUser(JSON.parse(userData))
+      } catch (error) {
+        console.error('Error parsing user data:', error)
+      }
+    } else {
+      setUser(null)
+    }
+  }, [isLoggedIn])
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('usuario')
+    setUser(null)
+    logout()
+  }
   const { totalPlatillos } = useCarrito()
 
   return (
@@ -51,17 +73,20 @@ export const Navbar = () => {
                     className='avatar'
                   />
                 </Link>
-                {/*
-              <button onClick={logout} className="logout-btn">
-                Cerrar sesión
-              </button>
-              */}
+                {user && (
+                  <span className='welcome-text'>
+                    ¡Hola, {user.nombre}!
+                  </span>
+                )}
+                <button onClick={handleLogout} className='logout-btn'>
+                  Cerrar sesión
+                </button>
               </>
               )
             : (
-              <button onClick={login} className='login-btn'>
+              <Link to='/login' className='login-btn'>
                 Iniciar sesión
-              </button>
+              </Link>
               )
         }
       </div>
