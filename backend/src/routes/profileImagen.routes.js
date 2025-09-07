@@ -1,7 +1,7 @@
 import express from 'express'
 import multer from 'multer'
 import path from 'path'
-import { User } from '../models/user.model.js'
+import User from '../models/user.model.js'
 
 const profileImageRouter = express.Router()
 

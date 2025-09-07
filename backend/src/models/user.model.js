@@ -76,8 +76,6 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 })
 
-userSchema.index({ correo: 1 })
-
 userSchema.methods.toJSON = function () {
   const usuario = this.toObject()
   delete usuario.contraseña
