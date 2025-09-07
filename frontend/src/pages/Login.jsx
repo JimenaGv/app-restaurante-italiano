@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useNavbar } from '../context/navbarContext'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import '../styles/auth-pages.css'
 
 const Login = () => {
   const navigate = useNavigate()
-  const { login } = useNavbar()
+  const location = useLocation()
+  const { login } = useAuth() // Cambiar a useAuth
 
   const [formData, setFormData] = useState({
     correo: '',
@@ -13,6 +14,8 @@ const Login = () => {
   })
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
+
+  const from = location.state?.from?.pathname || '/perfil'
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -54,25 +57,17 @@ const Login = () => {
     setLoading(true)
 
     try {
-      const response = await fetch('http://localhost:3000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
+      // Usar el login del AuthContext
+      const result = await login({
+        email: formData.correo,
+        password: formData.contraseña
       })
 
-      const data = await response.json()
-
-      if (response.ok) {
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('usuario', JSON.stringify(data.usuario))
-
-        login()
-        navigate('/')
+      if (result.success) {
+        navigate(from, { replace: true })
         alert('¡Bienvenido!')
       } else {
-        setErrors({ general: data.mensaje || 'Error en el inicio de sesión' })
+        setErrors({ general: result.message })
       }
     } catch (error) {
       console.error('Error:', error)
