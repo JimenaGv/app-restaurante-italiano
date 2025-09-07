@@ -9,14 +9,16 @@ import { ResumenPedido } from '../components/pedidos/ResumenPedido'
 import { Entrega } from '../components/pedidos/Entrega'
 // Método de pago
 import { Pago } from '../components/pedidos/Pago'
+import { useEffect, useState } from 'react'
 
 export const ConfirmarPedido = () => {
-  // Valores temporales para pruebas
-  const direccionSeleccionada = 'Calle Falsa 123'
-  const metodoSeleccionado = 'Tarjeta'
-  //
   const usuario = JSON.parse(localStorage.getItem('usuario'))
   const userId = usuario?.id
+
+  const [direccionSeleccionada, setDireccionSeleccionada] = useState(null)
+  const [metodoSeleccionado, setMetodoSeleccionado] = useState(null)
+  const [direcciones, setDirecciones] = useState([])
+  const [metodosPago, setMetodosPago] = useState([])
 
   const { carrito, limpiarCarrito } = useCarrito()
 
@@ -27,9 +29,22 @@ export const ConfirmarPedido = () => {
 
   const subtotal = carrito.reduce((acc, item) => acc + item.price * item.quantity, 0)
   const iva = subtotal * 0.16
-  const tarifa = getRandomIntInclusive(10, 50)
+  const tarifa = getRandomIntInclusive(5, 15)
   const total = subtotal + iva + tarifa
   const tiempoRandom = getRandomIntInclusive(25, 60)
+
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      const res = await fetch(`http://localhost:3000/api/perfil/${userId}`)
+      const data = await res.json()
+      setDirecciones(data.direcciones)
+      setMetodosPago(data.metodosPago)
+      setDireccionSeleccionada(data.direcciones[0])
+      setMetodoSeleccionado(data.metodosPago[0])
+    }
+
+    if (userId) fetchUsuario()
+  }, [userId])
 
   const iniciarFlujoDePedido = (pedidoId) => {
     const estados = [
@@ -61,6 +76,11 @@ export const ConfirmarPedido = () => {
   }
 
   const handleConfirmarPedido = async () => {
+    if (!direccionSeleccionada || !metodoSeleccionado) {
+      alert('Por favor selecciona una dirección y un método de pago antes de confirmar.')
+      return
+    }
+
     const pedidoSinId = {
       usuarioId: userId,
       platillos: carrito.map(item => ({
@@ -75,6 +95,8 @@ export const ConfirmarPedido = () => {
       fecha: new Date().toISOString(),
       tiempoEntrega: tiempoRandom
     }
+
+    /* console.log('Pedido a enviar:', pedidoSinId) */
 
     try {
       const res = await fetch('http://localhost:3000/pedidos', {
@@ -103,8 +125,21 @@ export const ConfirmarPedido = () => {
         <p>Revisa tu pedido y confirma para realizar la compra.</p>
       </div>
       <ResumenPedido carrito={carrito} subtotal={subtotal} iva={iva} tarifa={tarifa} total={total} />
-      <Entrega direccion={direccionSeleccionada} tiempo={tiempoRandom} />
-      <Pago metodo={metodoSeleccionado} />
+      <Entrega
+        direccion={direccionSeleccionada}
+        tiempo={tiempoRandom}
+        direcciones={direcciones}
+        setDireccionSeleccionada={setDireccionSeleccionada}
+        setDirecciones={setDirecciones}
+        userId={userId}
+      />
+      <Pago
+        metodo={metodoSeleccionado}
+        metodosPago={metodosPago}
+        setMetodoSeleccionado={setMetodoSeleccionado}
+        setMetodosPago={setMetodosPago}
+        userId={userId}
+      />
 
       <div className='caja-botones'>
         <button onClick={() => navigate('/carrito')}>Regresar al carrito</button>

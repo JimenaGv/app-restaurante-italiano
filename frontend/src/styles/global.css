@@ -51,8 +51,35 @@ h3 {
   background-color: white;
 }
 
+.segundo {
+  right: 100px !important
+}
+
 .con-boton button:hover {
   color: rgb(255, 255, 255);
+}
+
+.con-boton select {
+  padding: 10px;
+  border-radius: 40px;
+  margin-top: 10px;
+  border: 1px solid gray;
+  display: block;
+  margin-left: 10px;
+}
+
+.form-direccion input {
+  padding: 7px;
+  border-radius: 40px;
+  margin: 10px;
+  border: 1px solid gray;
+}
+
+.form-metodo input {
+  padding: 7px;
+  border-radius: 40px;
+  margin: 10px;
+  border: 1px solid gray;
 }
 
 /* Texto en negritas */
@@ -137,6 +164,15 @@ li {
   font-size: large;
 }
 
+.cont-historial p {
+  padding-bottom: 5px;
+}
+
 .rojo {
   color: #c53030;
+}
+
+.resaltar {
+  font-weight: 500;
+  color: gray;
 }
