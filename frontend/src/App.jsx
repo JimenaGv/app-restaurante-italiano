@@ -13,6 +13,8 @@ import { PedidoConfirmadoWrapper } from './components/pedidos/PedidoConfirmadoWr
 import Login from './pages/Login'
 import Register from './pages/Register'
 import { Historia } from './pages/Historia'
+import { Contacto } from './pages/Contacto'
+import { Ubicacion } from './pages/Ubicacion'
 
 export const App = () => {
   return (
@@ -45,7 +47,9 @@ const AppRoutes = () => {
           }
         />
         <Route path='/menu' element={<Menu />} />
+        <Route path='/ubicacion' element={<Ubicacion />} />
         <Route path='/historia' element={<Historia />} />
+        <Route path='/contacto' element={<Contacto />} />
         <Route path='/carrito' element={<Carrito />} />
         <Route path='/pedido-confirmado' element={<PedidoConfirmadoWrapper />} />
         <Route path='*' element={<NotFound />} /> {/* Página para rutas no establecidas */}

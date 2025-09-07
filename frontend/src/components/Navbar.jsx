@@ -45,11 +45,15 @@ export const Navbar = () => {
         <Link to='/menu'>
           <li>Menú</li>
         </Link>
-        <li>Ubicación</li>
+        <Link to='/ubicacion'>
+          <li>Ubicación</li>
+        </Link>
         <Link to='/historia'>
           <li>Historia</li>
         </Link>
-        <li>Contacto</li>
+        <Link to='/contacto'>
+          <li>Contacto</li>
+        </Link>
       </ul>
 
       {/* Acciones */}
