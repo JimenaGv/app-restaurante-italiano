@@ -1,21 +1,11 @@
-import React, { createContext, useState, useContext, useEffect } from 'react'
+import React, { createContext, useState, useContext } from 'react'
 
+// 1. Crear el contexto
 const NavbarContext = createContext()
 
+// 2. Crear el Provider
 export const NavbarProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    // Inicializar basado en si hay token en localStorage
-    return !!localStorage.getItem('token')
-  })
-
-  useEffect(() => {
-    const handleAuthChange = (event) => {
-      setIsLoggedIn(event.detail.isLoggedIn)
-    }
-
-    window.addEventListener('authStateChanged', handleAuthChange)
-    return () => window.removeEventListener('authStateChanged', handleAuthChange)
-  }, [])
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const login = () => setIsLoggedIn(true)
   const logout = () => setIsLoggedIn(false)
@@ -27,7 +17,7 @@ export const NavbarProvider = ({ children }) => {
   )
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
+// 3. Hook para usar el contexto
 export const useNavbar = () => {
   return useContext(NavbarContext)
 }

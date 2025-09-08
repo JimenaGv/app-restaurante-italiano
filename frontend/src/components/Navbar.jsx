@@ -1,15 +1,33 @@
-import { useAuth } from '../context/AuthContext'
+import { useNavbar } from '../context/navbarContext'
 import { useCarrito } from '../context/carrito'
 import '../styles/navbar.css'
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 
 export const Navbar = () => {
-  const { isLoggedIn, user, logout } = useAuth()
-  const { totalPlatillos } = useCarrito()
+  const { isLoggedIn, logout } = useNavbar()
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const userData = localStorage.getItem('usuario')
+    if (userData && isLoggedIn) {
+      try {
+        setUser(JSON.parse(userData))
+      } catch (error) {
+        console.error('Error parsing user data:', error)
+      }
+    } else {
+      setUser(null)
+    }
+  }, [isLoggedIn])
 
   const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('usuario')
+    setUser(null)
     logout()
   }
+  const { totalPlatillos } = useCarrito()
 
   return (
     <nav className='navbar'>
@@ -40,6 +58,7 @@ export const Navbar = () => {
           isLoggedIn
             ? (
               <>
+
                 <Link to='/carrito'>
                   <button className='icon-btn icon-carrito'>
                     <img src='https://img.icons8.com/?size=100&id=0DBkCUANmgoQ&format=png&color=000000' alt='' />
