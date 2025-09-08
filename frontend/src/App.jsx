@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Navbar } from './components/Navbar'
-import { NavbarProvider } from './context/navbarContext'
+import { NavbarProvider, useNavbar } from './context/navbarContext.jsx'
 import { CarritoProvider, useCarrito } from './context/carrito'
 import { UserProfile } from './pages/Perfil'
 import { Home } from './pages/Home'
@@ -26,29 +26,77 @@ export const App = () => {
 
 const AppRoutes = () => {
   const { carrito } = useCarrito()
+  const { isLoggedIn } = useNavbar()
   const canAccessPedido = carrito.length > 0
 
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/perfil' element={<UserProfile />} />
+        {/* Rutas públicas */}
         <Route path='/' element={<Home />} />
+        <Route path='/menu' element={<Menu />} />
+        <Route path='/historia' element={<Historia />} />
+
+        {/* Rutas de autenticación - solo para NO logueados */}
+        <Route
+          path='/login'
+          element={
+            <RutaProtegida canAccess={!isLoggedIn} redirectTo='/'>
+              <Login />
+            </RutaProtegida>
+          }
+        />
+        <Route
+          path='/register'
+          element={
+            <RutaProtegida canAccess={!isLoggedIn} redirectTo='/'>
+              <Register />
+            </RutaProtegida>
+          }
+        />
+
+        {/* Rutas protegidas - solo para logueados */}
+        <Route
+          path='/perfil'
+          element={
+            <RutaProtegida canAccess={isLoggedIn} redirectTo='/login'>
+              <UserProfile />
+            </RutaProtegida>
+          }
+        />
+
+        <Route
+          path='/carrito'
+          element={
+            <RutaProtegida canAccess={isLoggedIn} redirectTo='/login'>
+              <Carrito />
+            </RutaProtegida>
+          }
+        />
+
         <Route
           path='/confirmacion-pedido'
           element={
-            <RutaProtegida canAccess={canAccessPedido} redirectTo='/'>
+            <RutaProtegida
+              canAccess={isLoggedIn && canAccessPedido}
+              redirectTo={!isLoggedIn ? '/login' : '/'}
+            >
               <ConfirmarPedido />
             </RutaProtegida>
           }
         />
-        <Route path='/menu' element={<Menu />} />
-        <Route path='/historia' element={<Historia />} />
-        <Route path='/carrito' element={<Carrito />} />
-        <Route path='/pedido-confirmado' element={<PedidoConfirmadoWrapper />} />
-        <Route path='*' element={<NotFound />} /> {/* Página para rutas no establecidas */}
+
+        <Route
+          path='/pedido-confirmado'
+          element={
+            <RutaProtegida canAccess={isLoggedIn} redirectTo='/login'>
+              <PedidoConfirmadoWrapper />
+            </RutaProtegida>
+          }
+        />
+
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )
