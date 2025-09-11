@@ -1,105 +1,154 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-
+import { useState, useEffect } from 'react'
 
 export const ProfileForm = () => {
-  // // Estado que controla si el formulario está en modo edición: false = inputs bloqueados, true = inputs editables
-  const [isEditing, setIsEditing] = useState(false);
-   // Hook de react-hook-form
-  const {
-    register,        // Registrar cada input
-    handleSubmit,    // Manejar envío del formulario
-    formState: { errors } // Contiene los errores
-  } = useForm({
-    defaultValues: {
-      nombre: "Sophia",
-      apellidos: "Rossi",
-      correo: "sophia.rossi@email.com",
-      telefono: "+1234 567 890"
+  // Estado para guardar los datos del formulario
+  const [formData, setFormData] = useState({
+    nombre: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
+    correo: '',
+    telefono: ''
+  })
+
+  // Estado para controlar si se está editando
+  const [isEditing, setIsEditing] = useState(false)
+
+  // Cargar los datos del usuario desde el servidor al iniciar
+  useEffect(() => {
+    const userData = localStorage.getItem('usuario')
+    if (userData) {
+      const user = JSON.parse(userData)
+      fetch(`http://localhost:3000/perfil/${user.id}`)
+        .then(res => res.json())
+        .then(data => {
+          // Guardamos los datos recibidos en el formulario
+          setFormData({
+            nombre: data.nombre || '',
+            apellidoPaterno: data.apellidoPaterno || '',
+            apellidoMaterno: data.apellidoMaterno || '',
+            correo: data.correo || '',
+            telefono: data.telefono || ''
+          })
+        })
+        .catch(err => console.error('Error al cargar perfil:', err))
     }
-  });
+  }, [])
 
-  // Función de guardar
-  const onSubmit = (data) => {
-    console.log("Datos guardados:", data);
-    setIsEditing(false); // Bloquea de nuevo el formulario
-  };
+  // Manejar cambios en los inputs
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
 
-  // Función que activa la edición
-  const handleToggleEdit = (e) => {
-    e.preventDefault();
-    setIsEditing(true);
-  };
+  //  Guardar los cambios en el servidor
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const userId = JSON.parse(localStorage.getItem('usuario')).id
+    try {
+      const res = await fetch(`http://localhost:3000/perfil/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData) // mandamos todos los campos
+      })
+      const data = await res.json()
+
+      if (res.ok) {
+        alert('Datos actualizados correctamente')
+        setIsEditing(false)
+        // Guardamos el usuario actualizado en localStorage
+        localStorage.setItem('usuario', JSON.stringify(data.usuario))
+      } else {
+        alert(data.mensaje || 'Error al actualizar')
+      }
+    } catch (error) {
+      console.error('Error al actualizar:', error)
+      alert('Error de conexión con el servidor')
+    }
+  }
 
   return (
-    <>
-      <h2 className="title">Información del perfil</h2>
+    <form className='profile-form' onSubmit={handleSubmit}>
+      <h3>Información del perfil</h3>
 
-      <form className="form" onSubmit={isEditing ? handleSubmit(onSubmit) : handleToggleEdit}>
+      {/* Nombre */}
+      <label>
+        Nombre:
+        <input
+          type='text'
+          name='nombre'
+          value={formData.nombre}
+          onChange={handleChange}
+          disabled={!isEditing}
+        />
+      </label>
 
-  
-        <div className="form-group">
-          <label>Nombre</label>
+      {/* Apellidos */}
+      <div className='apellidos-row'>
+        <label>
+          Apellido paterno:
           <input
-            type="text"
+            type='text'
+            name='apellidoPaterno'
+            value={formData.apellidoPaterno}
+            onChange={handleChange}
             disabled={!isEditing}
-            {...register("nombre", { required: "El nombre es obligatorio" })}
           />
-          {errors.nombre && <p className="error">{errors.nombre.message}</p>}
-        </div>
+        </label>
 
-        <div className="form-group">
-          <label>Apellidos</label>
+        <label>
+          Apellido materno:
           <input
-            type="text"
+            type='text'
+            name='apellidoMaterno'
+            value={formData.apellidoMaterno}
+            onChange={handleChange}
             disabled={!isEditing}
-            {...register("apellidos", { required: "Los apellidos son obligatorios" })}
           />
-          {errors.apellidos && <p className="error">{errors.apellidos.message}</p>}
-        </div>
+        </label>
+      </div>
 
-        <div className="form-group full">
-          <label>Correo electrónico</label>
-          <input
-            type="email"
-            disabled={!isEditing}
-            {...register("correo", {
-              required: "El correo es obligatorio",
-              pattern: {
-                value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
-                message: "El correo no es válido"
-              }
-            })}
-          />
-          {errors.correo && <p className="error">{errors.correo.message}</p>}
-        </div>
+      {/*  Correo */}
+      <label>
+        Correo electrónico:
+        <input
+          type='email'
+          name='correo'
+          value={formData.correo}
+          onChange={handleChange}
+          disabled={!isEditing}
+        />
+      </label>
 
-        <div className="form-group full">
-          <label>Número de teléfono</label>
-          <input
-            type="tel"
-            disabled={!isEditing}
-            {...register("telefono", {
-              required: "El número es obligatorio",
-              pattern: {
-                value: /^[0-9+\s-]{8,15}$/,
-                message: "El número no es válido"
-              }
-            })}
-          />
-          {errors.telefono && <p className="error">{errors.telefono.message}</p>}
-        </div>
+      {/* Teléfono */}
+      <label>
+        Teléfono:
+        <input
+          type='text'
+          name='telefono'
+          value={formData.telefono}
+          onChange={handleChange}
+          disabled={!isEditing}
+        />
+      </label>
 
-        <div className="form-actions full">
-          <button type="submit" className="btn">
-            {isEditing ? "Guardar información" : "Actualizar información"}
-          </button>
-        </div>
-      </form>
-    </>
-  );
-};
-
-
-
- 
+      {/* Botón: "Editar" y "Guardar" */}
+      <div className='button-row'>
+        {isEditing
+          ? (
+            <button type='submit'>Guardar cambios</button>
+            )
+          : (
+            <button
+              type='button'
+              onClick={(e) => {
+                e.preventDefault()
+                setIsEditing(true)
+              }}
+            >
+              Actualizar datos
+            </button>
+            )}
+      </div>
+    </form>
+  )
+}

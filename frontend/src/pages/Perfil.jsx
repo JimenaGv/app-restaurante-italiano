@@ -8,9 +8,8 @@ import { useLocation } from 'react-router-dom'
 
 export const UserProfile = () => {
   const [activeSection, setActiveSection] = useState('perfil')
-  const [avatar, setAvatar] = useState('../public/fotoUsuario.png') // valor inicial
+  const [avatar, setAvatar] = useState('/fotoUsuario.png') // Imagen local
 
-  // manejar carga de imagen
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -19,7 +18,6 @@ export const UserProfile = () => {
     }
   }
 
-  // dirigir al historial de pedidos automáticamente
   const location = useLocation()
 
   useEffect(() => {
@@ -31,7 +29,6 @@ export const UserProfile = () => {
   return (
     <NavbarProvider>
       <div className='page'>
-
         <div className='container'>
           {/* Sidebar */}
           <aside className='sidebar'>
@@ -45,7 +42,7 @@ export const UserProfile = () => {
                 style={{ display: 'none' }}
               />
             </label>
-            <h2 className='username'>Sophia Rossi</h2>
+            <h2 className='username'>Perfil de Usuario</h2>
 
             <nav className='sidebar-links'>
               <button
@@ -69,7 +66,7 @@ export const UserProfile = () => {
             </nav>
           </aside>
 
-          {/* Informacion cada perfil */}
+          {/* Contenido dinámico */}
           <main className='content'>
             {activeSection === 'perfil' && <ProfileForm />}
             {activeSection === 'pedidos' && <Orders />}

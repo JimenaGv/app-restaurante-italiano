@@ -30,8 +30,7 @@ const metodoPagoSchema = new mongoose.Schema({
   }
 }, { _id: false })
 
-// Esquema principal para crear Usuario
-
+// Esquema principal para Usuario
 const userSchema = new mongoose.Schema({
   nombre: {
     type: String,
@@ -39,6 +38,16 @@ const userSchema = new mongoose.Schema({
     trim: true,
     minlength: [2, 'El nombre debe tener al menos 2 caracteres'],
     maxlength: [50, 'El nombre no puede tener más de 50 caracteres']
+  },
+  apellidoPaterno: {
+    type: String,
+    trim: true,
+    maxlength: [50, 'El apellido paterno no puede tener más de 50 caracteres']
+  },
+  apellidoMaterno: {
+    type: String,
+    trim: true,
+    maxlength: [50, 'El apellido materno no puede tener más de 50 caracteres']
   },
   correo: {
     type: String,
@@ -56,14 +65,16 @@ const userSchema = new mongoose.Schema({
     required: [true, 'La contraseña es obligatoria'],
     minlength: [6, 'La contraseña debe tener al menos 6 caracteres']
   },
-
+  telefono: {
+    type: String,
+    trim: true,
+    match: [/^[0-9+\s()-]{7,20}$/, 'Por favor ingresa un número válido']
+  },
   direcciones: [direccionSchema],
   metodosPago: [metodoPagoSchema],
-
-  profileImage: { // Para guardar la imagen de perfil
+  profileImage: {
     type: String
   },
-
   fechaRegistro: {
     type: Date,
     default: Date.now
@@ -76,6 +87,7 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 })
 
+// Ocultar contraseña al devolver el objeto
 userSchema.methods.toJSON = function () {
   const usuario = this.toObject()
   delete usuario.contraseña

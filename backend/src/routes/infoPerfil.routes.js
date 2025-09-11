@@ -1,36 +1,61 @@
-import { Router } from 'express'
+import express from 'express'
 import User from '../models/user.model.js'
 
-const perfilRouter = Router()
+const router = express.Router()
 
-//  Obtener perfil por ID
-perfilRouter.get('/:id', async (req, res) => {
+// Consultar perfil de un usuario por ID
+router.get('/:id', async (req, res) => {
   try {
-    const perfil = await User.findById(req.params.id)
-    if (!perfil) {
-      return res.status(404).json({ message: 'Perfil no encontrado' })
+    const { id } = req.params
+    const usuario = await User.findById(id)
+
+    if (!usuario) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' })
     }
-    res.json(perfil)
+
+    res.json({
+      id: usuario._id,
+      nombre: usuario.nombre,
+      apellidoPaterno: usuario.apellidoPaterno,
+      apellidoMaterno: usuario.apellidoMaterno,
+      correo: usuario.correo,
+      telefono: usuario.telefono,
+      profileImage: usuario.profileImage,
+      fechaRegistro: usuario.fechaRegistro,
+      activo: usuario.activo,
+      direcciones: usuario.direcciones,
+      metodosPago: usuario.metodosPago
+    })
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener el perfil', error })
+    console.error('Error al consultar perfil:', error)
+    res.status(500).json({ mensaje: 'Error interno del servidor' })
   }
 })
 
-// Actualizar perfil
-perfilRouter.put('/:id', async (req, res) => {
+// Actualizar perfil  (nombre, correo, apellidos y teléfono)
+router.put('/:id', async (req, res) => {
   try {
-    const perfilActualizado = await User.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true } // new = retorna el actualizado
+    const { nombre, correo, apellidoPaterno, apellidoMaterno, telefono } = req.body
+    const { id } = req.params
+
+    const usuarioActualizado = await User.findByIdAndUpdate(
+      id,
+      { nombre, correo, apellidoPaterno, apellidoMaterno, telefono },
+      { new: true }
     )
-    if (!perfilActualizado) {
-      return res.status(404).json({ message: 'Perfil no encontrado' })
+
+    if (!usuarioActualizado) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' })
     }
-    res.json(perfilActualizado)
+
+    res.json({
+      mensaje: 'Perfil actualizado correctamente',
+      usuario: usuarioActualizado
+    })
   } catch (error) {
-    res.status(400).json({ message: 'Error al actualizar el perfil', error })
+    console.error('Error al actualizar perfil:', error)
+    res.status(500).json({ mensaje: 'Error interno del servidor' })
   }
 })
 
-export default perfilRouter
+export default router

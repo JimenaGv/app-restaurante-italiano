@@ -15,7 +15,7 @@ export const CarritoProvider = ({ children }) => {
       setCarrito((prevCarrito) => [...prevCarrito, item])
     }
   }
-  
+
   const limpiarCarrito = () => {
     setCarrito([])
   }
