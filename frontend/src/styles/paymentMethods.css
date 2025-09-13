@@ -113,3 +113,24 @@
   border: none;
   border-top: 1px solid #eee;
 }
+
+.form-direccion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.form-direccion label {
+  flex: 1 1 45%;
+  font-size: 0.95rem;
+  color: #444;
+  display: flex;
+  flex-direction: column; /* Apila el texto y el input */
+}
+
+.input-text {
+  width: 80%;       /* Ocupa todo el ancho del label */
+  padding: 0.5rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}

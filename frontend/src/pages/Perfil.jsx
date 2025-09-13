@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import '../styles/perfil.css'
 import { NavbarProvider } from '../context/navbarContext'
 import { ProfileForm } from '../components/perfil/ProfileForm'
+import { Direcciones } from '../components/perfil/Direcciones'
 import { Orders } from '../components/perfil/Orders'
 import MetodosPago from '../components/perfil/PaymentMethods'
 import { useLocation } from 'react-router-dom'
@@ -63,6 +64,12 @@ export const UserProfile = () => {
               >
                 Métodos de Pago
               </button>
+              <button
+                className={activeSection === 'direcciones' ? 'active' : ''}
+                onClick={() => setActiveSection('direcciones')}
+              >
+                Direcciones
+              </button>
             </nav>
           </aside>
 
@@ -71,6 +78,7 @@ export const UserProfile = () => {
             {activeSection === 'perfil' && <ProfileForm />}
             {activeSection === 'pedidos' && <Orders />}
             {activeSection === 'pagos' && <MetodosPago />}
+            {activeSection === 'direcciones' && <Direcciones />}
           </main>
         </div>
       </div>

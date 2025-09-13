@@ -21,15 +21,16 @@ routerDireccionesPago.get('/:id', async (req, res) => {
 /* AGREGAR UNA DIRECCIÓN */
 routerDireccionesPago.post('/:id/direcciones', async (req, res) => {
   try {
-    const { calle, ciudad, estado, codigoPostal, pais } = req.body
-    if (!calle || !ciudad || !estado || !codigoPostal) {
-      return res.status(400).json({ error: 'Todos los campos obligatorios deben estar completos' })
+    const { calle, numeroInterior, numeroEXterior, colonia, alcadia, codigoPostal } = req.body
+
+    if (!calle || !numeroInterior || !numeroEXterior || !colonia || !alcadia || !codigoPostal) {
+      return res.status(400).json({ error: 'Todos los campos son obligatorios' })
     }
 
     const usuario = await User.findById(req.params.id)
     if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' })
 
-    usuario.direcciones.push({ calle, ciudad, estado, codigoPostal, pais })
+    usuario.direcciones.push({ calle, numeroInterior, numeroEXterior, colonia, alcadia, codigoPostal })
     await usuario.save()
 
     res.json({ direcciones: usuario.direcciones })
@@ -38,7 +39,7 @@ routerDireccionesPago.post('/:id/direcciones', async (req, res) => {
   }
 })
 
-/* ELIMINAR UNA DIRECCI */
+/* ELIMINAR UNA DIRECCIÓN */
 routerDireccionesPago.delete('/:id/direcciones/:index', async (req, res) => {
   try {
     const usuario = await User.findById(req.params.id)

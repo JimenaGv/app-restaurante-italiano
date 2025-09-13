@@ -3,10 +3,12 @@ import mongoose from 'mongoose'
 // Subesquema para Direcciones
 const direccionSchema = new mongoose.Schema({
   calle: { type: String, required: true },
-  ciudad: { type: String, required: true },
-  estado: { type: String, required: true },
+  numeroInterior: { type: Number, required: true },
+  numeroEXterior: { type: Number, required: true },
+  colonia: { type: String, required: true },
+  alcadia: { type: String, required: true },
   codigoPostal: { type: String, required: true },
-  pais: { type: String, default: 'México' }
+
 }, { _id: false })
 
 // Subesquema para Métodos de Pago
