@@ -9,23 +9,63 @@ import { useLocation } from 'react-router-dom'
 
 export const UserProfile = () => {
   const [activeSection, setActiveSection] = useState('perfil')
-  const [avatar, setAvatar] = useState('/fotoUsuario.png') // Imagen local
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      const imageUrl = URL.createObjectURL(file)
-      setAvatar(imageUrl)
-    }
-  }
-
+  const [avatar, setAvatar] = useState('/fotoUsuario.png')
+  const [userId, setUserId] = useState(null)
   const location = useLocation()
 
+  // Cargar userId desde localStorage
   useEffect(() => {
-    if (location.state?.section) {
-      setActiveSection(location.state.section)
+    const userData = localStorage.getItem('usuario')
+    if (userData) setUserId(JSON.parse(userData).id)
+  }, [])
+
+  // Cargar avatar y datos del usuario desde backend
+  useEffect(() => {
+    if (!userId) return
+
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/perfil/${userId}`)
+        const data = await res.json()
+        if (res.ok || res.status === 200) {
+          setAvatar(data.avatar || '/fotoUsuario.png')
+        } else {
+          console.error(data.mensaje)
+        }
+      } catch (err) {
+        console.error('Error al cargar usuario', err)
+      }
     }
+
+    fetchUser()
+  }, [userId])
+
+  useEffect(() => {
+    if (location.state?.section) setActiveSection(location.state.section)
   }, [location.state])
+
+  // Subir nueva imagen de avatar
+  const handleImageChange = async (e) => {
+    if (!userId) return console.error('Usuario no encontrado')
+
+    const file = e.target.files[0]
+    if (file) {
+      const formData = new FormData()
+      formData.append('avatar', file)
+
+      try {
+        const res = await fetch(`http://localhost:3000/perfil/avatar/${userId}`, {
+          method: 'POST',
+          body: formData
+        })
+        const data = await res.json()
+        if (res.ok) setAvatar(data.avatar)
+        else console.error(data.error)
+      } catch (err) {
+        console.error('Error al subir la imagen', err)
+      }
+    }
+  }
 
   return (
     <NavbarProvider>

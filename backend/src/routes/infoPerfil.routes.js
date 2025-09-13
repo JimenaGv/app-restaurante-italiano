@@ -3,35 +3,6 @@ import User from '../models/user.model.js'
 
 const router = express.Router()
 
-// Consultar perfil de un usuario por ID
-router.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params
-    const usuario = await User.findById(id)
-
-    if (!usuario) {
-      return res.status(404).json({ mensaje: 'Usuario no encontrado' })
-    }
-
-    res.json({
-      id: usuario._id,
-      nombre: usuario.nombre,
-      apellidoPaterno: usuario.apellidoPaterno,
-      apellidoMaterno: usuario.apellidoMaterno,
-      correo: usuario.correo,
-      telefono: usuario.telefono,
-      profileImage: usuario.profileImage,
-      fechaRegistro: usuario.fechaRegistro,
-      activo: usuario.activo,
-      direcciones: usuario.direcciones,
-      metodosPago: usuario.metodosPago
-    })
-  } catch (error) {
-    console.error('Error al consultar perfil:', error)
-    res.status(500).json({ mensaje: 'Error interno del servidor' })
-  }
-})
-
 // Actualizar perfil  (nombre, correo, apellidos y teléfono)
 router.put('/:id', async (req, res) => {
   try {

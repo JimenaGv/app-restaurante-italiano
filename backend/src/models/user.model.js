@@ -80,9 +80,7 @@ const userSchema = new mongoose.Schema({
   },
   direcciones: [direccionSchema],
   metodosPago: [metodoPagoSchema],
-  profileImage: {
-    type: String
-  },
+  avatar: { type: String, default: '/fotoUsuario.png' },
   fechaRegistro: {
     type: Date,
     default: Date.now

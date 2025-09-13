@@ -1,37 +1,63 @@
 import express from 'express'
 import multer from 'multer'
-import path from 'path'
 import User from '../models/user.model.js'
 
-const profileImageRouter = express.Router()
+const router = express.Router()
 
-// Configuración de Multer
+// Configuración de Multer para guardar los avatares
 const storage = multer.diskStorage({
-  destination: 'uploads/', // carpeta donde se guardan las fotos
+  destination: (req, file, cb) => cb(null, 'uploads/avatars'),
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname))
-  },
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+    cb(null, uniqueSuffix + '-' + file.originalname)
+  }
 })
 
 const upload = multer({ storage })
 
-// Ruta para subir foto de perfil
-profileImageRouter.post('/:id/profile-image', upload.single('profileImage'), async (req, res) => {
+// Ruta para subir avatar
+router.post('/avatar/:id', upload.single('avatar'), async (req, res) => {
   try {
-    const userId = req.params.id
-    const imageUrl = `/uploads/${req.file.filename}`
+    const { id } = req.params
+    if (!req.file) return res.status(400).json({ error: 'No se subió ningún archivo' })
 
-    // Guardamos en MongoDB
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { profileImage: imageUrl },
-      { new: true }
-    )
+    // Crear URL pública para el avatar
+    const avatarUrl = `${req.protocol}://${req.get('host')}/${req.file.path.replace(/\\/g, '/')}`
 
-    res.json({ success: true, user })
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message })
+    const user = await User.findByIdAndUpdate(id, { avatar: avatarUrl }, { new: true })
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' })
+
+    res.json({ message: 'Avatar actualizado', avatar: avatarUrl })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Error al subir la imagen' })
   }
 })
 
-export default profileImageRouter
+// Ruta para consultar perfil por ID
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    const usuario = await User.findById(id)
+    if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' })
+
+    res.json({
+      id: usuario._id,
+      nombre: usuario.nombre,
+      apellidoPaterno: usuario.apellidoPaterno,
+      apellidoMaterno: usuario.apellidoMaterno,
+      correo: usuario.correo,
+      telefono: usuario.telefono,
+      avatar: usuario.avatar, // <- CORRECTO
+      fechaRegistro: usuario.fechaRegistro,
+      activo: usuario.activo,
+      direcciones: usuario.direcciones,
+      metodosPago: usuario.metodosPago
+    })
+  } catch (error) {
+    console.error('Error al consultar perfil:', error)
+    res.status(500).json({ mensaje: 'Error interno del servidor' })
+  }
+})
+
+export default router
