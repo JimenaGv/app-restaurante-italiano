@@ -3,7 +3,7 @@ import '../styles/perfil.css'
 import { NavbarProvider } from '../context/navbarContext'
 import { ProfileForm } from '../components/perfil/ProfileForm'
 import { Orders } from '../components/perfil/Orders'
-import { PaymentMethods } from '../components/perfil/PaymentMethods'
+import MetodosPago from '../components/perfil/PaymentMethods'
 import { useLocation } from 'react-router-dom'
 
 export const UserProfile = () => {
@@ -70,7 +70,7 @@ export const UserProfile = () => {
           <main className='content'>
             {activeSection === 'perfil' && <ProfileForm />}
             {activeSection === 'pedidos' && <Orders />}
-            {activeSection === 'pagos' && <PaymentMethods />}
+            {activeSection === 'pagos' && <MetodosPago />}
           </main>
         </div>
       </div>

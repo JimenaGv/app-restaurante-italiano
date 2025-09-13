@@ -81,7 +81,7 @@ export const Navbar = () => {
                 </Link>
                 {user && (
                   <span className='welcome-text'>
-                    ¡Hola, {user.nombre}!
+                    ¡Hola, {user.id}!
                   </span>
                 )}
                 <button onClick={handleLogout} className='logout-btn'>

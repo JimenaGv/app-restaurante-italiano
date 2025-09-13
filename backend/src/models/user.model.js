@@ -13,20 +13,26 @@ const direccionSchema = new mongoose.Schema({
 const metodoPagoSchema = new mongoose.Schema({
   tipo: {
     type: String,
-    enum: ['tarjeta', 'paypal', 'efectivo', 'transferencia'],
+    enum: ['tarjeta'],
+    required: true,
+    default: 'tarjeta'
+  },
+  categoria: {
+    type: String,
+    enum: ['crédito', 'débito'],
     required: true
   },
   numeroTarjeta: {
     type: String,
-    required: function () { return this.tipo === 'tarjeta' }
+    required: true
   },
   vencimiento: {
     type: String,
-    required: function () { return this.tipo === 'tarjeta' }
+    required: true
   },
   titular: {
     type: String,
-    required: function () { return this.tipo === 'tarjeta' }
+    required: true
   }
 }, { _id: false })
 

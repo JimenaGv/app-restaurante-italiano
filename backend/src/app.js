@@ -30,7 +30,7 @@ app.use(express.json())
 app.use('/api', authRouter)               // login, registro
 app.use('/perfil', perfilRouter)          // info básica de perfil
 app.use('/api/perfil', profileImageRouter) // foto de perfil
-app.use('/api/perfil', routerDireccionesPago) // direcciones y pagos
+app.use('/direccionesPago', routerDireccionesPago) // direcciones y pagos
 app.use('/pedidos', pedidosRouter)        // pedidos
 app.use('/menu', menuRouter)              // menú
 
