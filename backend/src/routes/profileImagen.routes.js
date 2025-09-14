@@ -22,7 +22,18 @@ const upload = multer({ storage: multer.memoryStorage() })
 router.post('/avatar/:id', upload.single('avatar'), async (req, res) => {
   try {
     const { id } = req.params
-    if (!req.file) return res.status(400).json({ error: 'No se subió ningún archivo' })
+
+    // Validación de archivo
+    if (!req.file) {
+      console.warn('No se recibió archivo en la petición')
+      return res.status(400).json({ error: 'No se subió ningún archivo' })
+    }
+
+    console.log('Archivo recibido:', {
+      originalname: req.file.originalname,
+      mimetype: req.file.mimetype,
+      size: req.file.size
+    })
 
     // Subir imagen a Cloudinary desde el buffer
     const streamUpload = () => {
@@ -36,8 +47,13 @@ router.post('/avatar/:id', upload.single('avatar'), async (req, res) => {
             ]
           },
           (error, result) => {
-            if (result) resolve(result)
-            else reject(error)
+            if (error) {
+              console.error('Error en Cloudinary:', error)
+              reject(error)
+            } else {
+              console.log('Imagen subida a Cloudinary:', result.secure_url)
+              resolve(result)
+            }
           }
         )
         streamifier.createReadStream(req.file.buffer).pipe(stream)
@@ -45,14 +61,19 @@ router.post('/avatar/:id', upload.single('avatar'), async (req, res) => {
     }
 
     const result = await streamUpload()
+
+    // Actualizar usuario en MongoDB
     const user = await User.findByIdAndUpdate(id, { avatar: result.secure_url }, { new: true })
 
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' })
+    if (!user) {
+      console.warn('Usuario no encontrado:', id)
+      return res.status(404).json({ error: 'Usuario no encontrado' })
+    }
 
     res.json({ message: 'Avatar actualizado correctamente', avatar: result.secure_url })
   } catch (err) {
-    console.error('Error al subir imagen:', err)
-    res.status(500).json({ error: 'Error al subir la imagen' })
+    console.error('Error general al subir imagen:', err)
+    res.status(500).json({ error: err.message || 'Error interno al subir imagen' })
   }
 })
 
