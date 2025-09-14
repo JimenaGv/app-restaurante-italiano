@@ -16,6 +16,7 @@ import { Historia } from './pages/Historia'
 import { Contacto } from './pages/Contacto'
 import { Ubicacion } from './pages/Ubicacion'
 
+
 export const App = () => {
   return (
     <NavbarProvider>

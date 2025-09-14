@@ -83,10 +83,13 @@
 }
 
 .avatar {
-  width: 500px;
-  height: 50px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #eee;
 }
+
 
 .icon-carrito{
   position: relative;

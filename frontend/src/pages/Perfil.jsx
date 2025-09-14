@@ -2,36 +2,74 @@ import { useEffect, useState } from 'react'
 import '../styles/perfil.css'
 import { NavbarProvider } from '../context/navbarContext'
 import { ProfileForm } from '../components/perfil/ProfileForm'
+import { Direcciones } from '../components/perfil/Direcciones'
 import { Orders } from '../components/perfil/Orders'
-import { PaymentMethods } from '../components/perfil/PaymentMethods'
+import MetodosPago from '../components/perfil/PaymentMethods'
 import { useLocation } from 'react-router-dom'
 
 export const UserProfile = () => {
   const [activeSection, setActiveSection] = useState('perfil')
-  const [avatar, setAvatar] = useState('../public/fotoUsuario.png') // valor inicial
-
-  // manejar carga de imagen
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      const imageUrl = URL.createObjectURL(file)
-      setAvatar(imageUrl)
-    }
-  }
-
-  // dirigir al historial de pedidos automáticamente
+  const [avatar, setAvatar] = useState('/fotoUsuario.png')
+  const [userId, setUserId] = useState(null)
   const location = useLocation()
 
+  // Cargar userId desde localStorage
   useEffect(() => {
-    if (location.state?.section) {
-      setActiveSection(location.state.section)
+    const userData = localStorage.getItem('usuario')
+    if (userData) setUserId(JSON.parse(userData).id)
+  }, [])
+
+  // Cargar avatar y datos del usuario desde backend
+  useEffect(() => {
+    if (!userId) return
+
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/perfil/${userId}`)
+        const data = await res.json()
+        if (res.ok || res.status === 200) {
+          setAvatar(data.avatar || '/fotoUsuario.png')
+        } else {
+          console.error(data.mensaje)
+        }
+      } catch (err) {
+        console.error('Error al cargar usuario', err)
+      }
     }
+
+    fetchUser()
+  }, [userId])
+
+  useEffect(() => {
+    if (location.state?.section) setActiveSection(location.state.section)
   }, [location.state])
+
+  // Subir nueva imagen de avatar
+  const handleImageChange = async (e) => {
+    if (!userId) return console.error('Usuario no encontrado')
+
+    const file = e.target.files[0]
+    if (file) {
+      const formData = new FormData()
+      formData.append('avatar', file)
+
+      try {
+        const res = await fetch(`http://localhost:3000/perfil/avatar/${userId}`, {
+          method: 'POST',
+          body: formData
+        })
+        const data = await res.json()
+        if (res.ok) setAvatar(data.avatar)
+        else console.error(data.error)
+      } catch (err) {
+        console.error('Error al subir la imagen', err)
+      }
+    }
+  }
 
   return (
     <NavbarProvider>
       <div className='page'>
-
         <div className='container'>
           {/* Sidebar */}
           <aside className='sidebar'>
@@ -45,7 +83,7 @@ export const UserProfile = () => {
                 style={{ display: 'none' }}
               />
             </label>
-            <h2 className='username'>Sophia Rossi</h2>
+            <h2 className='username'>Perfil de Usuario</h2>
 
             <nav className='sidebar-links'>
               <button
@@ -66,14 +104,21 @@ export const UserProfile = () => {
               >
                 Métodos de Pago
               </button>
+              <button
+                className={activeSection === 'direcciones' ? 'active' : ''}
+                onClick={() => setActiveSection('direcciones')}
+              >
+                Direcciones
+              </button>
             </nav>
           </aside>
 
-          {/* Informacion cada perfil */}
+          {/* Contenido dinámico */}
           <main className='content'>
             {activeSection === 'perfil' && <ProfileForm />}
             {activeSection === 'pedidos' && <Orders />}
-            {activeSection === 'pagos' && <PaymentMethods />}
+            {activeSection === 'pagos' && <MetodosPago />}
+            {activeSection === 'direcciones' && <Direcciones />}
           </main>
         </div>
       </div>

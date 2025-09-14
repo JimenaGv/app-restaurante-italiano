@@ -3,7 +3,7 @@ import User from '../models/user.model.js'
 
 const routerDireccionesPago = express.Router()
 
-// Obtener direcciones y métodos de pago
+/* OBTENER DIRECCIONES Y MÉTODOS DE PAGO */
 routerDireccionesPago.get('/:id', async (req, res) => {
   try {
     const usuario = await User.findById(req.params.id)
@@ -18,63 +18,110 @@ routerDireccionesPago.get('/:id', async (req, res) => {
   }
 })
 
-
-//  Agregar una dirección
+/* AGREGAR UNA DIRECCIÓN */
 routerDireccionesPago.post('/:id/direcciones', async (req, res) => {
   try {
+    const { calle, numeroInterior, numeroEXterior, colonia, alcadia, codigoPostal } = req.body
+
+    if (!calle || !numeroInterior || !numeroEXterior || !colonia || !alcadia || !codigoPostal) {
+      return res.status(400).json({ error: 'Todos los campos son obligatorios' })
+    }
+
     const usuario = await User.findById(req.params.id)
     if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' })
 
-    usuario.direcciones.push(req.body)
+    usuario.direcciones.push({ calle, numeroInterior, numeroEXterior, colonia, alcadia, codigoPostal })
     await usuario.save()
 
-    res.json(usuario)
+    res.json({ direcciones: usuario.direcciones })
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
 })
 
-//  Eliminar dirección
-
+/* ELIMINAR UNA DIRECCIÓN */
 routerDireccionesPago.delete('/:id/direcciones/:index', async (req, res) => {
   try {
     const usuario = await User.findById(req.params.id)
     if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' })
 
-    usuario.direcciones.splice(req.params.index, 1)
+    const idx = parseInt(req.params.index, 10)
+    if (idx < 0 || idx >= usuario.direcciones.length) {
+      return res.status(400).json({ error: 'Índice de dirección inválido' })
+    }
+
+    usuario.direcciones.splice(idx, 1)
     await usuario.save()
 
-    res.json(usuario)
+    res.json({ direcciones: usuario.direcciones })
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
 })
 
-//  Agregar método de pago
+/* AGREGAR UN MÉTODO DE PAGO */
+
 routerDireccionesPago.post('/:id/metodos-pago', async (req, res) => {
   try {
+    const { numeroTarjeta, vencimiento, titular, categoria } = req.body
+    // categoria = "crédito" | "débito"
+
+    // Validar campos obligatorios
+    if (!numeroTarjeta || !vencimiento || !titular || !categoria) {
+      return res.status(400).json({ error: 'Todos los campos de la tarjeta son obligatorios (incluyendo si es crédito o débito)' })
+    }
+
+    // Validar tipo de tarjeta
+    const categoriasValidas = ['crédito', 'débito']
+    if (!categoriasValidas.includes(categoria.toLowerCase())) {
+      return res.status(400).json({ error: 'La categoría debe ser crédito o débito' })
+    }
+
+    // Validar número de tarjeta (16 dígitos)
+    if (!/^\d{16}$/.test(numeroTarjeta)) {
+      return res.status(400).json({ error: 'El número de tarjeta debe tener 16 dígitos' })
+    }
+
+    // Validar vencimiento (MM/AA)
+    if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(vencimiento)) {
+      return res.status(400).json({ error: 'El vencimiento debe estar en formato MM/AA' })
+    }
+
     const usuario = await User.findById(req.params.id)
     if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' })
 
-    usuario.metodosPago.push(req.body)
+    // Guardar método de pago
+    usuario.metodosPago.push({
+      tipo: 'tarjeta',
+      categoria: categoria.toLowerCase(), // "crédito" o "débito"
+      numeroTarjeta,
+      vencimiento,
+      titular
+    })
+
     await usuario.save()
 
-    res.json(usuario)
+    res.json({ metodosPago: usuario.metodosPago })
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
 })
 
-//  Eliminar método de pago
+/* ELIMINAR UN MÉTODO DE PAGO */
 routerDireccionesPago.delete('/:id/metodos-pago/:index', async (req, res) => {
   try {
     const usuario = await User.findById(req.params.id)
     if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' })
 
-    usuario.metodosPago.splice(req.params.index, 1)
+    const idx = parseInt(req.params.index, 10)
+    if (idx < 0 || idx >= usuario.metodosPago.length) {
+      return res.status(400).json({ error: 'Índice de método de pago inválido' })
+    }
+
+    usuario.metodosPago.splice(idx, 1)
     await usuario.save()
 
-    res.json(usuario)
+    res.json({ metodosPago: usuario.metodosPago })
   } catch (error) {
     res.status(400).json({ error: error.message })
   }

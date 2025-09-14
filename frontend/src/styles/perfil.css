@@ -1,7 +1,8 @@
+/* --- Base global --- */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', Arial, sans-serif;
   margin: 0;
-  background: #fff;
+  background: #f9fafb;
   color: #333;
 }
 
@@ -11,70 +12,22 @@ body {
   flex-direction: column;
 }
 
-/* Navbar */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 40px;
-  border-bottom: 1px solid #ddd;
-  background: #fff;
-}
 
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-}
 
-.nav-links {
-  display: flex;
-  gap: 20px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.nav-links li {
-  cursor: pointer;
-  color: #555;
-}
-
-.nav-links li:hover {
-  color: #000;
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.icon-btn {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-/* Layout principal */
+/* --- Layout principal --- */
 .container {
   display: flex;
   flex: 1;
 }
 
-/* Sidebar */
+/* --- Sidebar --- */
 .sidebar {
-  width: 250px;
-  border-right: 1px solid #ddd;
-  padding: 30px 20px;
+  width: 25%;
+  border-right: 1px solid #eee;
+  margin-top: 3%;
+  padding: 70px 20px;
   text-align: center;
-  background: #fafafa;
+  background: #fff;
 }
 
 .avatar-lg {
@@ -82,23 +35,39 @@ body {
   height: 100px;
   border-radius: 50%;
   margin-bottom: 15px;
+  border: 3px solid #f0f0f0;
+  object-fit: cover;
 }
 
 .username {
   font-size: 18px;
   font-weight: 600;
+  margin-bottom: 50px;
+}
+
+h2::after {
+  content: "";
+  display: block;
+  height: 2px; 
+  background: linear-gradient(to right, transparent, #ccc, transparent);
+  margin-top: 20px;
+  width: 100%;       /* 🔥 ancho más largo */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .email {
   font-size: 14px;
-  color: #666;
-  margin-bottom: 20px;
+  color: #777;
+  margin-bottom: 25px;
 }
 
 .sidebar-links {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 14px;
+  align-items: center;
+  
 }
 
 .sidebar-links button {
@@ -106,81 +75,124 @@ body {
   border: none;
   font-size: 15px;
   cursor: pointer;
-  color: #666;
+  color: #7c7676;
+  font-weight: 500;
+  padding: 8px 0;
+  width: 200px;
+  transition: color 0.2s ease, transform 0.2s ease;
+ 
 }
 
 .sidebar-links button:hover {
-  color: #000;
+    background-color: #e0dede !important;
+  color: #474646 !important;
+
 }
 
 .sidebar-links .active {
-  color: #000;
-  font-weight: bold;
+  color: #6d6969 !important;
+  font-weight: 700;
 }
 
-/* Contenido */
+/* --- Contenido --- */
 .content {
   flex: 1;
-  padding: 40px;
+  padding: 50px;
 }
 
 .title {
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 24px;
+  font-weight: 700;
   margin-bottom: 30px;
+  color: #222;
 }
 
-/* Formulario */
-.form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  max-width: 700px;
+/* --- Formulario --- */
+.profile-form {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 30px 35px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-.form-group {
+.profile-form h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+/* --- Labels e inputs --- */
+.profile-form label {
   display: flex;
   flex-direction: column;
-}
-
-.form-group.full {
-  grid-column: span 2;
-}
-
-.form-group label {
   font-size: 14px;
-  margin-bottom: 6px;
-  color: #555;
+  font-weight: 500;
+  margin-bottom: 18px;
+  color: #444;
 }
 
-.form-group input {
-  padding: 10px;
+.profile-form input {
+  margin-top: 6px;
+  padding: 12px 14px;
+  font-size: 15px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  font-size: 14px;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
-.form-actions {
+.profile-form input:focus {
+  border-color: #d32f2f;
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.15);
+}
+
+/* --- Apellidos en la misma fila --- */
+.apellidos-row {
+  display: flex;
+  gap: 16px;
+}
+
+.apellidos-row label {
+  flex: 1;
+}
+
+/* --- Teléfono más grande --- */
+.profile-form input[name="telefono"] {
+  width: 100%;
+  font-size: 16px;
+}
+
+/* --- Botón --- */
+.button-row {
   display: flex;
   justify-content: flex-end;
+  margin-top: 25px;
 }
 
-.btn {
-  background: #e63946;
-  color: white;
-  padding: 12px 24px;
+.profile-form button {
+  padding: 10px 22px;
   border: none;
-  border-radius: 8px;
+  border-radius: 22px;
+  background-color: #e53935;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  font-weight: 500;
+  transition: background 0.25s ease, transform 0.15s ease;
 }
 
-.btn:hover {
-  background: #c53030;
+.profile-form button:hover {
+  background-color: #c62828;
+  transform: translateY(-2px);
 }
-.error {
-  color: red;         
-  font-size: 0.9rem;  
-  margin-top: 4px;    
-  font-weight: 500;  
+
+.profile-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
 }
+
+
