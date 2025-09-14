@@ -27,7 +27,7 @@ export const Direcciones = () => {
     const fetchDirecciones = async () => {
       try {
         setLoading(true)
-        const res = await api.get(`/direcciones/${userId}`)
+        const res = await api.get(`/direccionesPago/${userId}`)
         setDirecciones(res.data.direcciones || [])
       } catch (err) {
         console.error(err)
@@ -63,7 +63,7 @@ export const Direcciones = () => {
 
     try {
       setLoading(true)
-      const res = await api.post(`/direcciones/${userId}/direcciones`, formData)
+      const res = await api.post(`/direccionesPago/${userId}/direcciones`, formData)
       setDirecciones(res.data.direcciones || [])
       setFormData({
         calle: '',
@@ -90,7 +90,7 @@ export const Direcciones = () => {
 
     try {
       setLoading(true)
-      const res = await api.delete(`/direcciones/${userId}/direcciones/${selectedIndex}`)
+      const res = await api.delete(`/direccionesPago/${userId}/direcciones/${selectedIndex}`)
       setDirecciones(res.data.direcciones || [])
       setSelectedIndex(null)
       setDeleteMessage({ text: 'Dirección eliminada correctamente.', kind: 'success' })
