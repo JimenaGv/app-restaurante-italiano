@@ -4,6 +4,7 @@ import { api } from '../../services/api'
 export const Orders = () => {
   const [pedidos, setPedidos] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   const usuario = JSON.parse(localStorage.getItem('usuario'))
   const userId = usuario?.id
@@ -29,6 +30,8 @@ export const Orders = () => {
         setLoading(false)
       } catch (err) {
         console.error('Error al obtener pedidos:', err)
+        setError('No se pudieron cargar tus pedidos. Intenta más tarde.')
+        setLoading(false)
       }
     }
 
@@ -45,40 +48,50 @@ export const Orders = () => {
         <h2 className='title'>Historial de pedidos</h2>
       </div>
       <div>
-        {loading
-          ? <p>Cargando pedidos...</p>
-          : pedidos.length === 0
-            ? (
-              <p>Aquí se mostrarán tus pedidos recientes...</p>
-              )
-            : (
-              <ul>
-                {pedidos.map(p => (
-                  <li key={p._id}>
-                    <div className='cont-historial'>
-                      <p className='rojo'>{iconoEstado[p.estado] || '⚪'}
-                        <span> {p.estado}</span>
-                      </p>
-                      <span>Resumen del pedido:</span>
-                      <ul>
-                        {p.platillos.map((item, index) => (
-                          <li key={index}>
-                            {item.nombre}
-                            <small>
-                              (cantidad: {item.cantidad}, precio unitario: ${item.precio.toFixed(2)})
-                            </small>
-                          </li>
-                        ))}
-                      </ul>
-                      <p><p className='resaltar'>Fecha:</p> {new Date(p.fecha).toLocaleDateString()}</p>
-                      <p><p className='resaltar'>Dirección de entrega:</p> {p.direccion.calle} #{p.direccion.numeroEXterior} Int. {p.direccion.numeroInterior}, Col. {p.direccion.colonia}, {p.direccion.alcadia}, CP {p.direccion.codigoPostal}</p>
-                      <p><p className='resaltar'>Método de pago:</p> {`Tarjeta de ${p.metodoPago.categoria?.toUpperCase()} (Vto. ${p.metodoPago.vencimiento}) ••••${p.metodoPago.numeroTarjeta?.slice(-4)}`}</p>
-                      <p><p className='resaltar'>Total:</p> $ {calcularTotal(p.platillos).toFixed(2)}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              )}
+        {loading && <p>Cargando pedidos...</p>}
+
+        {error && <p className='rojo'>{error}</p>}
+
+        {!loading && pedidos.length === 0 && !error && (
+          <p>Aquí se mostrarán tus pedidos recientes...</p>
+        )}
+
+        {!loading && pedidos.length > 0 && (
+          <ul>
+            {pedidos.map(p => (
+              <li key={p._id}>
+                <div className='cont-historial'>
+                  <p className='rojo'>
+                    {iconoEstado[p.estado] || '⚪'} <span>{p.estado}</span>
+                  </p>
+                  <span>Resumen del pedido:</span>
+                  <ul>
+                    {p.platillos.map((item, index) => (
+                      <li key={index}>
+                        {item.nombre}
+                        <small>
+                          (cantidad: {item.cantidad}, precio unitario: ${item.precio.toFixed(2)})
+                        </small>
+                      </li>
+                    ))}
+                  </ul>
+                  <p>
+                    <span className='resaltar'>Fecha:</span> {new Date(p.fecha).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <span className='resaltar'>Dirección de entrega:</span> {p.direccion.calle} #{p.direccion.numeroEXterior} Int. {p.direccion.numeroInterior}, Col. {p.direccion.colonia}, {p.direccion.alcadia}, CP {p.direccion.codigoPostal}
+                  </p>
+                  <p>
+                    <span className='resaltar'>Método de pago:</span> {`Tarjeta de ${p.metodoPago.categoria?.toUpperCase()} (Vto. ${p.metodoPago.vencimiento}) ••••${p.metodoPago.numeroTarjeta?.slice(-4)}`}
+                  </p>
+                  <p>
+                    <span className='resaltar'>Total:</span> $ {calcularTotal(p.platillos).toFixed(2)}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </>
   )

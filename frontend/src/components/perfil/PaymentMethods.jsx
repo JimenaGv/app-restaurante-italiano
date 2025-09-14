@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import '../../styles/paymentMethods.css'
 import { api } from '../../services/api'
-
-const API_URL = api
 
 export default function MetodosPago () {
   const [metodosPago, setMetodosPago] = useState([])
@@ -28,7 +25,7 @@ export default function MetodosPago () {
     const fetchMetodos = async () => {
       try {
         setLoading(true)
-        const res = await axios.get(`${API_URL}/${userId}`)
+        const res = await api.get(`/direccionesPago/${userId}`)
         setMetodosPago(res.data.metodosPago || [])
       } catch (err) {
         console.error(err)
@@ -75,7 +72,8 @@ export default function MetodosPago () {
         categoria: formData.categoria
       }
 
-      const res = await axios.post(`${API_URL}/${userId}/metodos-pago`, payload)
+      const res = await api.post(`/direccionesPago/${userId}/metodos-pago`, payload)
+
       setMetodosPago(res.data.metodosPago || [])
       setFormData({ categoria: 'crédito', numeroTarjeta: '', vencimiento: '', titular: '' })
       setAddMessage({ text: 'Tarjeta agregada correctamente.', kind: 'success' })
@@ -95,7 +93,7 @@ export default function MetodosPago () {
 
     try {
       setLoading(true)
-      const res = await axios.delete(`${API_URL}/${userId}/metodos-pago/${selectedIndex}`)
+      const res = await api.delete(`/direccionesPago/${userId}/metodos-pago/${selectedIndex}`)
       setMetodosPago(res.data.metodosPago || [])
       setSelectedIndex(null)
       setDeleteMessage({ text: 'Tarjeta eliminada correctamente.', kind: 'success' })
