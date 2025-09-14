@@ -30,7 +30,7 @@ app.use(cors({
       callback(new Error('No permitido por CORS'))
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   credentials: true
 }))
 
