@@ -180,3 +180,29 @@ li {
 .btn-grande {
   width: 100%;
 }
+
+.aviso-faltante {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.aviso-faltante h3 {
+  color: #856404;
+}
+
+.aviso-faltante button {
+  margin-top: 1rem;
+  background-color: #ffc107;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cursiva {
+  font-style: italic;
+}

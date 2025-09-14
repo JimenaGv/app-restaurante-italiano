@@ -17,35 +17,36 @@ const pedidosSchema = new mongoose.Schema({
   }],
   direccion: {
     calle: { type: String, required: true },
-    ciudad: { type: String, required: true },
-    estado: { type: String, required: true },
+    numeroInterior: { type: String, required: true },
+    numeroEXterior: { type: Number, required: true },
+    colonia: { type: String, required: true },
+    alcadia: { type: String, required: true },
     codigoPostal: { type: String, required: true },
-    pais: { type: String, default: "México" },
   },
   metodoPago: {
-    tipo: {
-      type: String,
-      enum: ["tarjeta", "paypal", "efectivo", "transferencia"],
-      required: true,
-    },
-    numeroTarjeta: {
-      type: String,
-      required: function () {
-        return this.tipo === "tarjeta";
-      },
-    },
-    vencimiento: {
-      type: String,
-      required: function () {
-        return this.tipo === "tarjeta";
-      },
-    },
-    titular: {
-      type: String,
-      required: function () {
-        return this.tipo === "tarjeta";
-      },
-    }},
+  tipo: {
+    type: String,
+    enum: ['tarjeta'],
+    required: true,
+    default: 'tarjeta'
+  },
+  categoria: {
+    type: String,
+    enum: ['crédito', 'débito'],
+    required: true
+  },
+  numeroTarjeta: {
+    type: String,
+    required: true
+  },
+  vencimiento: {
+    type: String,
+    required: true
+  },
+  titular: {
+    type: String,
+    required: true
+  }},
   estado: {
     type: String,
     default: "Solicitud recibida",

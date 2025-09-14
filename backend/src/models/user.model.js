@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 // Subesquema para Direcciones
 const direccionSchema = new mongoose.Schema({
   calle: { type: String, required: true },
-  numeroInterior: { type: Number, required: true },
+  numeroInterior: { type: String, required: true },
   numeroEXterior: { type: Number, required: true },
   colonia: { type: String, required: true },
   alcadia: { type: String, required: true },

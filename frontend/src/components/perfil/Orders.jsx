@@ -70,8 +70,8 @@ export const Orders = () => {
                         ))}
                       </ul>
                       <p><p className='resaltar'>Fecha:</p> {new Date(p.fecha).toLocaleDateString()}</p>
-                      <p><p className='resaltar'>Dirección de entrega:</p> {`${p.direccion.calle}, ${p.direccion.ciudad}, ${p.direccion.estado}, ${p.direccion.codigoPostal}, ${p.direccion.pais}`}</p>
-                      <p><p className='resaltar'>Método de pago:</p> {p.metodoPago.tipo === 'tarjeta' ? `Tarjeta terminada en ${p.metodoPago.numeroTarjeta.slice(-4)} (Vence: ${p.metodoPago.vencimiento})` : p.metodoPago.tipo}</p>
+                      <p><p className='resaltar'>Dirección de entrega:</p> {p.direccion.calle} #{p.direccion.numeroEXterior} Int. {p.direccion.numeroInterior}, Col. {p.direccion.colonia}, {p.direccion.alcadia}, CP {p.direccion.codigoPostal}</p>
+                      <p><p className='resaltar'>Método de pago:</p> {`Tarjeta de ${p.metodoPago.categoria?.toUpperCase()} (Vto. ${p.metodoPago.vencimiento}) ••••${p.metodoPago.numeroTarjeta?.slice(-4)}`}</p>
                       <p><p className='resaltar'>Total:</p> $ {calcularTotal(p.platillos).toFixed(2)}</p>
                     </div>
                   </li>

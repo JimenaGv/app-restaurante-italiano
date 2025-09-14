@@ -34,16 +34,22 @@ export const ConfirmarPedido = () => {
   const tiempoRandom = getRandomIntInclusive(25, 60)
 
   useEffect(() => {
-    const fetchUsuario = async () => {
-      const res = await fetch(`http://localhost:3000/api/perfil/${userId}`)
-      const data = await res.json()
-      setDirecciones(data.direcciones)
-      setMetodosPago(data.metodosPago)
-      setDireccionSeleccionada(data.direcciones[0])
-      setMetodoSeleccionado(data.metodosPago[0])
+    const fetchDatosUsuario = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/direccionesPago/${userId}`)
+        const data = await res.json()
+
+        setDirecciones(data.direcciones || [])
+        setMetodosPago(data.metodosPago || [])
+
+        setDireccionSeleccionada(data.direcciones?.[0] || null)
+        setMetodoSeleccionado(data.metodosPago?.[0] || null)
+      } catch (error) {
+        console.error('Error al obtener datos del usuario:', error)
+      }
     }
 
-    if (userId) fetchUsuario()
+    if (userId) fetchDatosUsuario()
   }, [userId])
 
   const iniciarFlujoDePedido = (pedidoId) => {

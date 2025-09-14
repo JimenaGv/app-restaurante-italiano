@@ -1,8 +1,11 @@
 // Página que se muestra en rutas no establecidas
 import '../styles/global.css'
 import '../styles/chef.css'
+import { useNavigate } from 'react-router-dom'
 
 export const NotFound = () => {
+  const navigate = useNavigate()
+
   return (
     <>
       <div className='encabezado'>
@@ -17,7 +20,7 @@ export const NotFound = () => {
         <img src='../public/chef.png' alt='Chef italiano' className='chef-image' />
       </div>
       <div className='centrado espacio-arriba'>
-        <button>Página de inicio</button>
+        <button onClick={() => navigate('/')}>Página de inicio</button>
       </div>
     </>
   )
