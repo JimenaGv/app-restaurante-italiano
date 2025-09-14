@@ -1,62 +1,58 @@
 import express from 'express'
 import multer from 'multer'
+import streamifier from 'streamifier'
+import { v2 as cloudinary } from 'cloudinary'
+import dotenv from 'dotenv'
 import User from '../models/user.model.js'
 
+dotenv.config()
 const router = express.Router()
 
-// Configuración de Multer para guardar los avatares
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/avatars'),
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-    cb(null, uniqueSuffix + '-' + file.originalname)
-  }
+// Configurar Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-const upload = multer({ storage })
+// Usamos multer en modo memoria (no guarda en disco)
+const upload = multer({ storage: multer.memoryStorage() })
 
-// Ruta para subir avatar
+// Ruta para subir avatar a Cloudinary
 router.post('/avatar/:id', upload.single('avatar'), async (req, res) => {
   try {
     const { id } = req.params
     if (!req.file) return res.status(400).json({ error: 'No se subió ningún archivo' })
 
-    // Crear URL pública para el avatar
-    const avatarUrl = `${req.protocol}://${req.get('host')}/${req.file.path.replace(/\\/g, '/')}`
+    // Subir imagen a Cloudinary desde el buffer
+    const streamUpload = () => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'avatars',
+            transformation: [
+              { width: 300, height: 300, crop: 'fill', gravity: 'face', radius: 'max' },
+              { quality: 'auto' }
+            ]
+          },
+          (error, result) => {
+            if (result) resolve(result)
+            else reject(error)
+          }
+        )
+        streamifier.createReadStream(req.file.buffer).pipe(stream)
+      })
+    }
 
-    const user = await User.findByIdAndUpdate(id, { avatar: avatarUrl }, { new: true })
+    const result = await streamUpload()
+    const user = await User.findByIdAndUpdate(id, { avatar: result.secure_url }, { new: true })
+
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado' })
 
-    res.json({ message: 'Avatar actualizado', avatar: avatarUrl })
+    res.json({ message: 'Avatar actualizado correctamente', avatar: result.secure_url })
   } catch (err) {
-    console.error(err)
+    console.error('Error al subir imagen:', err)
     res.status(500).json({ error: 'Error al subir la imagen' })
-  }
-})
-
-// Ruta para consultar perfil por ID
-router.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params
-    const usuario = await User.findById(id)
-    if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' })
-
-    res.json({
-      id: usuario._id,
-      nombre: usuario.nombre,
-      apellidoPaterno: usuario.apellidoPaterno,
-      apellidoMaterno: usuario.apellidoMaterno,
-      correo: usuario.correo,
-      telefono: usuario.telefono,
-      avatar: usuario.avatar, // <- CORRECTO
-      fechaRegistro: usuario.fechaRegistro,
-      activo: usuario.activo,
-      direcciones: usuario.direcciones,
-      metodosPago: usuario.metodosPago
-    })
-  } catch (error) {
-    console.error('Error al consultar perfil:', error)
-    res.status(500).json({ mensaje: 'Error interno del servidor' })
   }
 })
 

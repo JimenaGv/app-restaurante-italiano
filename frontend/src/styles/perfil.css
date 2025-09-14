@@ -195,4 +195,22 @@ h2::after {
   transform: none;
 }
 
+.upload-message {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #4caf50; /* verde para éxito */
+  text-align: center;
+  opacity: 0;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.upload-message.error {
+  color: #f44336; /* rojo para error */
+}
 
