@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import '../../styles/paymentMethods.css'
 import { api } from '../../services/api'
-
-const API_URL = api
 
 export const Direcciones = () => {
   const [direcciones, setDirecciones] = useState([])
@@ -30,7 +27,7 @@ export const Direcciones = () => {
     const fetchDirecciones = async () => {
       try {
         setLoading(true)
-        const res = await axios.get(`${API_URL}/${userId}`)
+        const res = await api.get(`/direcciones/${userId}`)
         setDirecciones(res.data.direcciones || [])
       } catch (err) {
         console.error(err)
@@ -66,7 +63,7 @@ export const Direcciones = () => {
 
     try {
       setLoading(true)
-      const res = await axios.post(`${API_URL}/${userId}/direcciones`, formData)
+      const res = await api.post(`/direcciones/${userId}/direcciones`, formData)
       setDirecciones(res.data.direcciones || [])
       setFormData({
         calle: '',
@@ -93,7 +90,7 @@ export const Direcciones = () => {
 
     try {
       setLoading(true)
-      const res = await axios.delete(`${API_URL}/${userId}/direcciones/${selectedIndex}`)
+      const res = await api.delete(`/direcciones/${userId}/direcciones/${selectedIndex}`)
       setDirecciones(res.data.direcciones || [])
       setSelectedIndex(null)
       setDeleteMessage({ text: 'Dirección eliminada correctamente.', kind: 'success' })

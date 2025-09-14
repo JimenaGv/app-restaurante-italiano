@@ -19,10 +19,7 @@ pedidosRouter.get('/:usuarioId', async (req, res) => {
   try {
     const { usuarioId } = req.params
     const listaPedidos = await Pedidos.find({ usuarioId }).sort({ fecha: -1 })
-    if (listaPedidos.length === 0) {
-      return res.status(404).json({ message: 'El usuario no tiene pedidos registrados.' })
-    }
-    res.json(listaPedidos)
+    return res.status(200).json(listaPedidos)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
