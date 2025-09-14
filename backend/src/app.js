@@ -17,11 +17,15 @@ const PORT = process.env.PORT
 const app = express()
 
 // *********************************************************************
-app.use(cors(/* {
-  origin: "https://app-restaurante-italiano-q16i.vercel.app/"
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://app-restaurante-italiano-q16i.vercel.app"
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
-} */))
+}))
+
 app.use(express.json())
 
 // Rutas
