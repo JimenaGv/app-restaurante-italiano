@@ -17,7 +17,7 @@ export const NotFound = () => {
         <p>Da clic en el botón de abajo para volver.</p>
       </div>
       <div className='chef-container'>
-        <img src='../public/chef.png' alt='Chef italiano' className='chef-image' />
+        <img src='/chef.png' alt='Chef italiano' className='chef-image' />
       </div>
       <div className='centrado espacio-arriba'>
         <button onClick={() => navigate('/')}>Página de inicio</button>
