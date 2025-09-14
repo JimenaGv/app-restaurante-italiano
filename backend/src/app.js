@@ -16,12 +16,20 @@ config()
 const PORT = process.env.PORT
 const app = express()
 
-// *********************************************************************
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://bella-italia-restaurante-italiano.vercel.app'
+]
+
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://bella-italia-restaurante-italiano.vercel.app"
-  ],
+  origin: function (origin, callback) {
+    // Permitir peticiones sin origin (como desde Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('No permitido por CORS'))
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }))
