@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { api } from '../../services/api'
 
 export const ProfileForm = () => {
   // Estado para guardar los datos del formulario
@@ -14,23 +15,26 @@ export const ProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false)
 
   // Cargar los datos del usuario desde el servidor al iniciar
+  const fetchPerfil = async (user) => {
+    try {
+      const { data } = await api.get(`/perfil/${user.id}`)
+      setFormData({
+        nombre: data.nombre || '',
+        apellidoPaterno: data.apellidoPaterno || '',
+        apellidoMaterno: data.apellidoMaterno || '',
+        correo: data.correo || '',
+        telefono: data.telefono || ''
+      })
+    } catch (err) {
+      console.error('Error al cargar perfil:', err)
+    }
+  }
+
   useEffect(() => {
     const userData = localStorage.getItem('usuario')
     if (userData) {
       const user = JSON.parse(userData)
-      fetch(`http://localhost:3000/perfil/${user.id}`)
-        .then(res => res.json())
-        .then(data => {
-          // Guardamos los datos recibidos en el formulario
-          setFormData({
-            nombre: data.nombre || '',
-            apellidoPaterno: data.apellidoPaterno || '',
-            apellidoMaterno: data.apellidoMaterno || '',
-            correo: data.correo || '',
-            telefono: data.telefono || ''
-          })
-        })
-        .catch(err => console.error('Error al cargar perfil:', err))
+      fetchPerfil(user)
     }
   }, [])
 
@@ -45,24 +49,13 @@ export const ProfileForm = () => {
     e.preventDefault()
     const userId = JSON.parse(localStorage.getItem('usuario')).id
     try {
-      const res = await fetch(`http://localhost:3000/perfil/${userId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData) // mandamos todos los campos
-      })
-      const data = await res.json()
-
-      if (res.ok) {
-        alert('Datos actualizados correctamente')
-        setIsEditing(false)
-        // Guardamos el usuario actualizado en localStorage
-        localStorage.setItem('usuario', JSON.stringify(data.usuario))
-      } else {
-        alert(data.mensaje || 'Error al actualizar')
-      }
+      const { data } = await api.put(`/perfil/${userId}`, formData)
+      alert('Datos actualizados correctamente')
+      setIsEditing(false)
+      localStorage.setItem('usuario', JSON.stringify(data.usuario))
     } catch (error) {
       console.error('Error al actualizar:', error)
-      alert('Error de conexión con el servidor')
+      alert(error.response?.data?.mensaje || 'Error al actualizar')
     }
   }
 

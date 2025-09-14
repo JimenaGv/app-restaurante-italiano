@@ -10,6 +10,7 @@ import { Entrega } from '../components/pedidos/Entrega'
 // Método de pago
 import { Pago } from '../components/pedidos/Pago'
 import { useEffect, useState } from 'react'
+import { api } from '../services/api'
 
 export const ConfirmarPedido = () => {
   const usuario = JSON.parse(localStorage.getItem('usuario'))
@@ -36,8 +37,7 @@ export const ConfirmarPedido = () => {
   useEffect(() => {
     const fetchDatosUsuario = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/direccionesPago/${userId}`)
-        const data = await res.json()
+        const { data } = await api.get(`/direccionesPago/${userId}`)
 
         setDirecciones(data.direcciones || [])
         setMetodosPago(data.metodosPago || [])
@@ -65,11 +65,7 @@ export const ConfirmarPedido = () => {
 
     const avanzarEstado = () => {
       const { nombre, tiempo } = estados[etapa]
-      fetch(`http://localhost:3000/pedidos/${pedidoId}/estado`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ estado: nombre })
-      })
+      api.patch(`/pedidos/${pedidoId}/estado`, { estado: nombre })
 
       if (etapa < estados.length - 1) {
         setTimeout(avanzarEstado, tiempo)
@@ -105,15 +101,7 @@ export const ConfirmarPedido = () => {
     /* console.log('Pedido a enviar:', pedidoSinId) */
 
     try {
-      const res = await fetch('http://localhost:3000/pedidos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pedidoSinId)
-      })
-
-      if (!res.ok) throw new Error('Error al confirmar el pedido.')
-
-      const pedidoConId = await res.json() // Obtener el _id desde el backend
+      const { data: pedidoConId } = await api.post('/pedidos', pedidoSinId)
 
       iniciarFlujoDePedido(pedidoConId._id)
       navigate('/pedido-confirmado', { state: { pedido: pedidoConId } }) // Pasar con el _id incluido

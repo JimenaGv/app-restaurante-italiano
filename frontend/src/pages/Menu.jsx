@@ -3,6 +3,7 @@ import '../styles/menu.css'
 import React, { useState, useEffect } from 'react'
 import { CardMenu } from '../components/menu/CardMenu'
 import { ModalPlatillo } from '../components/menu/ModalPlatillo'
+import { api } from '../services/api'
 
 export const Menu = () => {
   // PAYLOAD
@@ -143,20 +144,12 @@ export const Menu = () => {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const res = await fetch('http://localhost:3000/menu', {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' }
-        })
-
-        if (!res.ok) throw new Error('Error al obtener el menú.')
-
-        const menuCompleto = await res.json()
-
+        const { data: menuCompleto } = await api.get('/menu')
         setMenu(menuCompleto)
         setActiveTab(menuCompleto[0])
       } catch (error) {
         setMenu([])
-        console.error(error)
+        console.error('Error al obtener el menú:', error)
       }
     }
 

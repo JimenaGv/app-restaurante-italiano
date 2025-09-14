@@ -3,6 +3,7 @@ import { useCarrito } from '../context/carrito'
 import '../styles/navbar.css'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { api } from '../services/api'
 
 export const Navbar = () => {
   const { isLoggedIn, logout } = useNavbar()
@@ -19,15 +20,10 @@ export const Navbar = () => {
       // Traer avatar desde backend
       const fetchAvatar = async () => {
         try {
-          const res = await fetch(`http://localhost:3000/perfil/${parsedUser.id}`)
-          const data = await res.json()
-          if (res.ok || res.status === 200) {
-            setAvatar(data.avatar || '/fotoUsuario.png')
-          } else {
-            console.error(data.mensaje)
-          }
-        } catch (err) {
-          console.error('Error al cargar avatar:', err)
+          const { data } = await api.get(`/perfil/${parsedUser.id}`)
+          setAvatar(data.avatar || '/fotoUsuario.png')
+        } catch (error) {
+          console.error('Error al cargar avatar:', error)
         }
       }
 

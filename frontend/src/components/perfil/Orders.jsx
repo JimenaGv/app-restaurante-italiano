@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { api } from '../../services/api'
 
 export const Orders = () => {
   const [pedidos, setPedidos] = useState([])
@@ -20,15 +21,15 @@ export const Orders = () => {
   useEffect(() => {
     if (!userId) return
 
-    const fetchPedidos = () => {
-      fetch(`http://localhost:3000/pedidos/${userId}`)
-        .then(res => res.json())
-        .then(data => {
-          const ordenados = data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
-          setPedidos(ordenados)
-          setLoading(false)
-        })
-        .catch(err => console.error('Error al obtener pedidos:', err))
+    const fetchPedidos = async () => {
+      try {
+        const { data } = await api.get(`/pedidos/${userId}`)
+        const ordenados = data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+        setPedidos(ordenados)
+        setLoading(false)
+      } catch (err) {
+        console.error('Error al obtener pedidos:', err)
+      }
     }
 
     fetchPedidos() // Primera carga

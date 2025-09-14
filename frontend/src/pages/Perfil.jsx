@@ -6,6 +6,7 @@ import { Direcciones } from '../components/perfil/Direcciones'
 import { Orders } from '../components/perfil/Orders'
 import MetodosPago from '../components/perfil/PaymentMethods'
 import { useLocation } from 'react-router-dom'
+import { api } from '../services/api'
 
 export const UserProfile = () => {
   const [activeSection, setActiveSection] = useState('perfil')
@@ -25,13 +26,8 @@ export const UserProfile = () => {
 
     const fetchUser = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/perfil/${userId}`)
-        const data = await res.json()
-        if (res.ok || res.status === 200) {
-          setAvatar(data.avatar || '/fotoUsuario.png')
-        } else {
-          console.error(data.mensaje)
-        }
+        const { data } = await api.get(`/perfil/${userId}`)
+        setAvatar(data.avatar || '/fotoUsuario.png')
       } catch (err) {
         console.error('Error al cargar usuario', err)
       }
@@ -54,13 +50,10 @@ export const UserProfile = () => {
       formData.append('avatar', file)
 
       try {
-        const res = await fetch(`http://localhost:3000/perfil/avatar/${userId}`, {
-          method: 'POST',
-          body: formData
+        const { data } = await api.post(`/perfil/avatar/${userId}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
         })
-        const data = await res.json()
-        if (res.ok) setAvatar(data.avatar)
-        else console.error(data.error)
+        setAvatar(data.avatar)
       } catch (err) {
         console.error('Error al subir la imagen', err)
       }

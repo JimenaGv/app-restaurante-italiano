@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import '../../styles/paymentMethods.css'
+import { api } from '../../services/api'
 
-const API_URL = 'http://localhost:3000/direccionesPago'
+const API_URL = api
 
 export default function MetodosPago () {
   const [metodosPago, setMetodosPago] = useState([])

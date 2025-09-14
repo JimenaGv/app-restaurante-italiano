@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useNavbar } from '../context/navbarContext'
 import '../styles/auth-pages.css'
+import { api } from '../services/api'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -54,29 +55,19 @@ const Login = () => {
     setLoading(true)
 
     try {
-      const response = await fetch('http://localhost:3000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      })
+      const { data } = await api.post('/api/login', formData)
 
-      const data = await response.json()
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('usuario', JSON.stringify(data.usuario))
 
-      if (response.ok) {
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('usuario', JSON.stringify(data.usuario))
-
-        login()
-        navigate('/')
-        alert('¡Bienvenido!')
-      } else {
-        setErrors({ general: data.mensaje || 'Error en el inicio de sesión' })
-      }
+      login()
+      navigate('/')
+      alert('¡Bienvenido!')
     } catch (error) {
       console.error('Error:', error)
-      setErrors({ general: 'Error de conexión. Intenta nuevamente.' })
+      setErrors({
+        general: error.response?.data?.mensaje || 'Error en el inicio de sesión'
+      })
     } finally {
       setLoading(false)
     }

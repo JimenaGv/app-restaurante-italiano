@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useNavbar } from '../context/navbarContext'
 import '../styles/auth-pages.css'
+import { api } from '../services/api'
 
 const Register = () => {
   const navigate = useNavigate()
@@ -70,33 +71,23 @@ const Register = () => {
     setLoading(true)
 
     try {
-      const response = await fetch('http://localhost:3000/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nombre: formData.nombre.trim(),
-          correo: formData.correo,
-          contraseña: formData.contraseña
-        })
+      const { data } = await api.post('/api/register', {
+        nombre: formData.nombre.trim(),
+        correo: formData.correo,
+        contraseña: formData.contraseña
       })
 
-      const data = await response.json()
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('usuario', JSON.stringify(data.usuario))
 
-      if (response.ok) {
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('usuario', JSON.stringify(data.usuario))
-
-        login()
-        navigate('/')
-        alert('¡Cuenta creada exitosamente!')
-      } else {
-        setErrors({ general: data.mensaje || 'Error al crear la cuenta' })
-      }
+      login()
+      navigate('/')
+      alert('¡Cuenta creada exitosamente!')
     } catch (error) {
       console.error('Error:', error)
-      setErrors({ general: 'Error de conexión. Intenta nuevamente.' })
+      setErrors({
+        general: error.response?.data?.mensaje || 'Error al crear la cuenta'
+      })
     } finally {
       setLoading(false)
     }
